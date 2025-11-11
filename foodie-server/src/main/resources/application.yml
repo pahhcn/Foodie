@@ -1,0 +1,50 @@
+# Tomcat
+server:
+  tomcat:
+    uri-encoding: UTF-8
+  port: 8080
+  servlet:
+    context-path: /foodie-online
+
+spring:
+  datasource:
+    # 推荐使用新版驱动（或省略此项让 Spring Boot 自动识别）
+    driverClassName: com.mysql.cj.jdbc.Driver
+
+    # 推荐的 MySQL URL（注意 serverTimezone，charset，和 useSSL）
+    url: jdbc:mysql://127.0.0.1:3306/foodie_online?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false
+
+    username: root
+    password: 123456
+
+  # 如果你要切换到 SQL Server，可以取消下面注释（示例）
+  # datasource:
+  #   driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  #   url: jdbc:sqlserver://127.0.0.1:1433;DatabaseName=foodie_online
+  #   username: sa
+  #   password: 123456
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  resources:
+    static-locations: classpath:static/,file:static/,file:upload/
+
+# mybatis-plus
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*.xml
+  typeAliasesPackage: com.entity
+  global-config:
+    id-type: 1
+    field-strategy: 2
+    db-column-underline: true
+    refresh-mapper: true
+    logic-delete-value: -1
+    logic-not-delete-value: 0
+    sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    call-setters-on-nulls: true
+    jdbc-type-for-null: 'null'
