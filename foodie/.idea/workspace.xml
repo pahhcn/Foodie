@@ -5,9 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3b06ed88-01af-4ca2-8614-5fe0cb483d39" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/../docs/API命名转换方案.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/API文档.md" beforeDir="false" afterPath="$PROJECT_DIR$/../docs/API文档.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../foodie-admin/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/front/front/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/front/front/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/front/front/js/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/front/front/js/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/front/front/pages/home/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/front/front/pages/home/home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/front/front/pages/meishidingdan/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/front/front/pages/meishidingdan/list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/front/front/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/front/front/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/front/front/js/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/front/front/js/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/front/front/pages/home/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/front/front/pages/home/home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/front/front/pages/meishidingdan/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/front/front/pages/meishidingdan/list.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,6 +99,7 @@
       <workItem from="1732458398312" duration="215000" />
       <workItem from="1762821554188" duration="1880000" />
       <workItem from="1762823493380" duration="330000" />
+      <workItem from="1762914753692" duration="1227000" />
     </task>
     <servers />
   </component>
