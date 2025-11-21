@@ -41,10 +41,11 @@ import com.utils.CommonUtil;
  * 后端接口
  * @author 
  * @email 
- * @date 2021-03-12 15:27:04
+ * @date 2025-11-12 15:27:04
  */
 @RestController
 @RequestMapping("/news")
+@SuppressWarnings("unchecked")
 public class NewsController {
     @Autowired
     private NewsService newsService;
@@ -122,7 +123,7 @@ public class NewsController {
      */
     @RequestMapping("/save")
     public R save(@RequestBody NewsEntity news, HttpServletRequest request){
-    	news.setId(new Date().getTime()+new Double(Math.floor(Math.random()*1000)).longValue());
+    	news.setId(System.currentTimeMillis()+(long)(Math.floor(Math.random()*1000)));
     	//ValidatorUtils.validateEntity(news);
         newsService.insert(news);
         return R.ok();
@@ -133,7 +134,7 @@ public class NewsController {
      */
     @RequestMapping("/add")
     public R add(@RequestBody NewsEntity news, HttpServletRequest request){
-    	news.setId(new Date().getTime()+new Double(Math.floor(Math.random()*1000)).longValue());
+    	news.setId(System.currentTimeMillis()+(long)(Math.floor(Math.random()*1000)));
     	//ValidatorUtils.validateEntity(news);
         newsService.insert(news);
         return R.ok();
@@ -175,14 +176,14 @@ public class NewsController {
 			Date remindEndDate = null;
 			if(map.get("remindstart")!=null) {
 				Integer remindStart = Integer.parseInt(map.get("remindstart").toString());
-				c.setTime(new Date()); 
+				c.setTimeInMillis(System.currentTimeMillis()); 
 				c.add(Calendar.DAY_OF_MONTH,remindStart);
 				remindStartDate = c.getTime();
 				map.put("remindstart", sdf.format(remindStartDate));
 			}
 			if(map.get("remindend")!=null) {
 				Integer remindEnd = Integer.parseInt(map.get("remindend").toString());
-				c.setTime(new Date());
+				c.setTimeInMillis(System.currentTimeMillis());
 				c.add(Calendar.DAY_OF_MONTH,remindEnd);
 				remindEndDate = c.getTime();
 				map.put("remindend", sdf.format(remindEndDate));

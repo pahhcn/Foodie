@@ -41,10 +41,11 @@ import com.utils.CommonUtil;
  * 后端接口
  * @author 
  * @email 
- * @date 2021-03-12 15:27:04
+ * @date 2025-11-12 15:27:04
  */
 @RestController
 @RequestMapping("/yonghu")
+@SuppressWarnings("unchecked")
 public class YonghuController {
     @Autowired
     private YonghuService yonghuService;
@@ -78,7 +79,7 @@ public class YonghuController {
 		if(user!=null) {
 			return R.error("注册用户已存在");
 		}
-		Long uId = new Date().getTime();
+		Long uId = System.currentTimeMillis();
 		yonghu.setId(uId);
         yonghuService.insert(yonghu);
         return R.ok();
@@ -188,13 +189,13 @@ public class YonghuController {
      */
     @RequestMapping("/save")
     public R save(@RequestBody YonghuEntity yonghu, HttpServletRequest request){
-    	yonghu.setId(new Date().getTime()+new Double(Math.floor(Math.random()*1000)).longValue());
+    	yonghu.setId(System.currentTimeMillis()+(long)(Math.floor(Math.random()*1000)));
     	//ValidatorUtils.validateEntity(yonghu);
     	YonghuEntity user = yonghuService.selectOne(new EntityWrapper<YonghuEntity>().eq("yonghuzhanghao", yonghu.getYonghuzhanghao()));
 		if(user!=null) {
 			return R.error("用户已存在");
 		}
-		yonghu.setId(new Date().getTime());
+		yonghu.setId(System.currentTimeMillis());
         yonghuService.insert(yonghu);
         return R.ok();
     }
@@ -204,13 +205,13 @@ public class YonghuController {
      */
     @RequestMapping("/add")
     public R add(@RequestBody YonghuEntity yonghu, HttpServletRequest request){
-    	yonghu.setId(new Date().getTime()+new Double(Math.floor(Math.random()*1000)).longValue());
+    	yonghu.setId(System.currentTimeMillis()+(long)(Math.floor(Math.random()*1000)));
     	//ValidatorUtils.validateEntity(yonghu);
     	YonghuEntity user = yonghuService.selectOne(new EntityWrapper<YonghuEntity>().eq("yonghuzhanghao", yonghu.getYonghuzhanghao()));
 		if(user!=null) {
 			return R.error("用户已存在");
 		}
-		yonghu.setId(new Date().getTime());
+		yonghu.setId(System.currentTimeMillis());
         yonghuService.insert(yonghu);
         return R.ok();
     }
@@ -251,14 +252,14 @@ public class YonghuController {
 			Date remindEndDate = null;
 			if(map.get("remindstart")!=null) {
 				Integer remindStart = Integer.parseInt(map.get("remindstart").toString());
-				c.setTime(new Date()); 
+				c.setTimeInMillis(System.currentTimeMillis()); 
 				c.add(Calendar.DAY_OF_MONTH,remindStart);
 				remindStartDate = c.getTime();
 				map.put("remindstart", sdf.format(remindStartDate));
 			}
 			if(map.get("remindend")!=null) {
 				Integer remindEnd = Integer.parseInt(map.get("remindend").toString());
-				c.setTime(new Date());
+				c.setTimeInMillis(System.currentTimeMillis());
 				c.add(Calendar.DAY_OF_MONTH,remindEnd);
 				remindEndDate = c.getTime();
 				map.put("remindend", sdf.format(remindEndDate));

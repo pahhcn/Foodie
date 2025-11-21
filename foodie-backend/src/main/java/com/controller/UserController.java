@@ -37,6 +37,7 @@ import com.utils.ValidatorUtils;
  */
 @RequestMapping("users")
 @RestController
+@SuppressWarnings("unchecked")
 public class UserController{
 	
 	@Autowired

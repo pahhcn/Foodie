@@ -41,10 +41,11 @@ import com.utils.CommonUtil;
  * 后端接口
  * @author 
  * @email 
- * @date 2021-03-12 15:27:04
+ * @date 2025-11-12 15:27:04
  */
 @RestController
 @RequestMapping("/storeup")
+@SuppressWarnings("unchecked")
 public class StoreupController {
     @Autowired
     private StoreupService storeupService;
@@ -126,7 +127,7 @@ public class StoreupController {
      */
     @RequestMapping("/save")
     public R save(@RequestBody StoreupEntity storeup, HttpServletRequest request){
-    	storeup.setId(new Date().getTime()+new Double(Math.floor(Math.random()*1000)).longValue());
+    	storeup.setId(System.currentTimeMillis()+(long)(Math.floor(Math.random()*1000)));
     	//ValidatorUtils.validateEntity(storeup);
     	storeup.setUserid((Long)request.getSession().getAttribute("userId"));
         storeupService.insert(storeup);
@@ -138,7 +139,7 @@ public class StoreupController {
      */
     @RequestMapping("/add")
     public R add(@RequestBody StoreupEntity storeup, HttpServletRequest request){
-    	storeup.setId(new Date().getTime()+new Double(Math.floor(Math.random()*1000)).longValue());
+    	storeup.setId(System.currentTimeMillis()+(long)(Math.floor(Math.random()*1000)));
     	//ValidatorUtils.validateEntity(storeup);
     	storeup.setUserid((Long)request.getSession().getAttribute("userId"));
         storeupService.insert(storeup);
@@ -181,14 +182,14 @@ public class StoreupController {
 			Date remindEndDate = null;
 			if(map.get("remindstart")!=null) {
 				Integer remindStart = Integer.parseInt(map.get("remindstart").toString());
-				c.setTime(new Date()); 
+				c.setTimeInMillis(System.currentTimeMillis()); 
 				c.add(Calendar.DAY_OF_MONTH,remindStart);
 				remindStartDate = c.getTime();
 				map.put("remindstart", sdf.format(remindStartDate));
 			}
 			if(map.get("remindend")!=null) {
 				Integer remindEnd = Integer.parseInt(map.get("remindend").toString());
-				c.setTime(new Date());
+				c.setTimeInMillis(System.currentTimeMillis());
 				c.add(Calendar.DAY_OF_MONTH,remindEnd);
 				remindEndDate = c.getTime();
 				map.put("remindend", sdf.format(remindEndDate));

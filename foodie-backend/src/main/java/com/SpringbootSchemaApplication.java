@@ -35,18 +35,18 @@ public class SpringbootSchemaApplication extends SpringBootServletInitializer{
 		String apiBaseUrl = "http://localhost:" + port + contextPath;
 		
 		System.out.println("\n========================================");
-		System.out.println("🎉 应用启动成功！");
+		System.out.println(" 应用启动成功！");
 		System.out.println("========================================");
-		System.out.println("📡 后端 API: " + apiBaseUrl);
-		System.out.println("📄 API 文档: " + apiBaseUrl + "/v3/api-docs");
+		System.out.println(" 后端 API: " + apiBaseUrl);
+		System.out.println(" API 文档: " + apiBaseUrl + "/v3/api-docs");
 		System.out.println("========================================");
-		System.out.println("🌐 用户端前台: http://localhost:3000");
-		System.out.println("🔧 管理后台: http://localhost:8081");
+		System.out.println(" 用户端前台: http://localhost:3000");
+		System.out.println(" 管理后台: http://localhost:8081");
 		System.out.println("========================================");
-		System.out.println("👤 管理员账号: abo");
-		System.out.println("🔑 管理员密码: abo");
+		System.out.println(" 管理员账号: foodie");
+		System.out.println(" 管理员密码: foodie");
 		System.out.println("========================================");
-		System.out.println("💡 提示: 前后端已分离，请分别启动前端项目");
+		System.out.println(" 提示: 本项目前后端分离，请分别启动前端项目");
 		System.out.println("========================================\n");
 	}
 }

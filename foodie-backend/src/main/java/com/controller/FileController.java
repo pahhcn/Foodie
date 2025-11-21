@@ -59,7 +59,7 @@ public class FileController{
 		if(!upload.exists()) {
 		    upload.mkdirs();
 		}
-		String fileName = new Date().getTime()+"."+fileExt;
+		String fileName = System.currentTimeMillis()+"."+fileExt;
 		File dest = new File(upload.getAbsolutePath()+"/"+fileName);
 		file.transferTo(dest);
 		if(StringUtils.isNotBlank(type) && type.equals("1")) {

@@ -41,10 +41,11 @@ import com.utils.CommonUtil;
  * 后端接口
  * @author 
  * @email 
- * @date 2021-03-12 15:27:04
+ * @date 2025-11-12 15:27:04
  */
 @RestController
 @RequestMapping("/meishidian")
+@SuppressWarnings("unchecked")
 public class MeishidianController {
     @Autowired
     private MeishidianService meishidianService;
@@ -78,7 +79,7 @@ public class MeishidianController {
 		if(user!=null) {
 			return R.error("注册用户已存在");
 		}
-		Long uId = new Date().getTime();
+		Long uId = System.currentTimeMillis();
 		meishidian.setId(uId);
         meishidianService.insert(meishidian);
         return R.ok();
@@ -190,13 +191,13 @@ public class MeishidianController {
      */
     @RequestMapping("/save")
     public R save(@RequestBody MeishidianEntity meishidian, HttpServletRequest request){
-    	meishidian.setId(new Date().getTime()+new Double(Math.floor(Math.random()*1000)).longValue());
+    	meishidian.setId(System.currentTimeMillis()+(long)(Math.floor(Math.random()*1000)));
     	//ValidatorUtils.validateEntity(meishidian);
     	MeishidianEntity user = meishidianService.selectOne(new EntityWrapper<MeishidianEntity>().eq("dianpuzhanghao", meishidian.getDianpuzhanghao()));
 		if(user!=null) {
 			return R.error("用户已存在");
 		}
-		meishidian.setId(new Date().getTime());
+		meishidian.setId(System.currentTimeMillis());
         meishidianService.insert(meishidian);
         return R.ok();
     }
@@ -206,13 +207,13 @@ public class MeishidianController {
      */
     @RequestMapping("/add")
     public R add(@RequestBody MeishidianEntity meishidian, HttpServletRequest request){
-    	meishidian.setId(new Date().getTime()+new Double(Math.floor(Math.random()*1000)).longValue());
+    	meishidian.setId(System.currentTimeMillis()+(long)(Math.floor(Math.random()*1000)));
     	//ValidatorUtils.validateEntity(meishidian);
     	MeishidianEntity user = meishidianService.selectOne(new EntityWrapper<MeishidianEntity>().eq("dianpuzhanghao", meishidian.getDianpuzhanghao()));
 		if(user!=null) {
 			return R.error("用户已存在");
 		}
-		meishidian.setId(new Date().getTime());
+		meishidian.setId(System.currentTimeMillis());
         meishidianService.insert(meishidian);
         return R.ok();
     }
@@ -253,14 +254,14 @@ public class MeishidianController {
 			Date remindEndDate = null;
 			if(map.get("remindstart")!=null) {
 				Integer remindStart = Integer.parseInt(map.get("remindstart").toString());
-				c.setTime(new Date()); 
+				c.setTimeInMillis(System.currentTimeMillis()); 
 				c.add(Calendar.DAY_OF_MONTH,remindStart);
 				remindStartDate = c.getTime();
 				map.put("remindstart", sdf.format(remindStartDate));
 			}
 			if(map.get("remindend")!=null) {
 				Integer remindEnd = Integer.parseInt(map.get("remindend").toString());
-				c.setTime(new Date());
+				c.setTimeInMillis(System.currentTimeMillis());
 				c.add(Calendar.DAY_OF_MONTH,remindEnd);
 				remindEndDate = c.getTime();
 				map.put("remindend", sdf.format(remindEndDate));

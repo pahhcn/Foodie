@@ -95,6 +95,6 @@ npm run serve
 | 后端 API | http://localhost:8080/foodie | REST API 接口 |
 | API 文档 | http://localhost:8080/foodie/v3/api-docs | OpenAPI JSON |
 | 用户端 | http://localhost:3000 | Vue3 用户前台 |
-| 管理后台 | http://localhost:8081 | Vue2 管理后台 |
+| 管理后台 | http://localhost:8081 | Vue2 管理后台 | 管理员账号密码foodie foodie
 
 

@@ -1,22 +1,21 @@
 /*
-SQLyog Ultimate v11.3 (64 bit)
-MySQL - 5.7.32-log : Database - foodie
-*********************************************************************
-*/
+ * 食客在线数据库脚本
+ * 数据库管理工具: navcat17
+ * MySQL 版本: 8.0
+ * 数据库名称: foodie
+ * 创建日期: 2025-11-17
+ * 说明: 食客在线点餐系统数据库初始化脚本
+ *********************************************************************
+ */
 
-/*!40101 SET NAMES utf8 */;
 
-/*!40101 SET SQL_MODE=''*/;
-
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+SET NAMES utf8;
+SET FOREIGN_KEY_CHECKS = 0;
 CREATE DATABASE /*!32312 IF NOT EXISTS*/`foodie` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
 USE `foodie`;
 
-/*Table structure for table `config` */
+/* 配置表结构 */
 
 DROP TABLE IF EXISTS `config`;
 
@@ -27,11 +26,11 @@ CREATE TABLE `config` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='配置文件';
 
-/*Data for the table `config` */
+/* 配置表数据 */
 
 insert  into `config`(`id`,`name`,`value`) values (1,'picture1','http://localhost:8080/foodie/upload/picture1.jpg'),(2,'picture2','http://localhost:8080/foodie/upload/picture2.jpg'),(3,'picture3','http://localhost:8080/foodie/upload/picture3.jpg'),(6,'homepage',NULL);
 
-/*Table structure for table `meishidian` */
+/* 美食店表结构 */
 
 DROP TABLE IF EXISTS `meishidian`;
 
@@ -51,11 +50,11 @@ CREATE TABLE `meishidian` (
   UNIQUE KEY `dianpuzhanghao` (`dianpuzhanghao`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1615534171320 DEFAULT CHARSET=utf8 COMMENT='美食店';
 
-/*Data for the table `meishidian` */
+/* 美食店表数据 */
 
 insert  into `meishidian`(`id`,`addtime`,`dianpuzhanghao`,`mima`,`dianpumingcheng`,`zhaopian`,`lianxidianhua`,`dianpujieshao`,`dianpudizhi`,`zhaopaimeishi`,`lianxiren`) values (21,'2021-03-12 15:27:34','美食店1','123456','店铺名称1','http://localhost:8080/foodie/upload/meishidian_zhaopian1.jpg','13823888881','店铺介绍1','店铺地址1','招牌美食1','联系人1'),(22,'2021-03-12 15:27:34','美食店2','123456','店铺名称2','http://localhost:8080/foodie/upload/meishidian_zhaopian2.jpg','13823888882','店铺介绍2','店铺地址2','招牌美食2','联系人2'),(23,'2021-03-12 15:27:34','美食店3','123456','店铺名称3','http://localhost:8080/foodie/upload/meishidian_zhaopian3.jpg','13823888883','店铺介绍3','店铺地址3','招牌美食3','联系人3'),(24,'2021-03-12 15:27:34','美食店4','123456','店铺名称4','http://localhost:8080/foodie/upload/meishidian_zhaopian4.jpg','13823888884','店铺介绍4','店铺地址4','招牌美食4','联系人4'),(25,'2021-03-12 15:27:34','美食店5','123456','店铺名称5','http://localhost:8080/foodie/upload/meishidian_zhaopian5.jpg','13823888885','店铺介绍5','店铺地址5','招牌美食5','联系人5'),(26,'2021-03-12 15:27:34','美食店6','123456','店铺名称6','http://localhost:8080/foodie/upload/meishidian_zhaopian6.jpg','13823888886','店铺介绍6','店铺地址6','招牌美食6','联系人6'),(1615534171319,'2021-03-12 15:29:31','1','1','xxx店铺','http://localhost:8080/foodie/upload/1615534236114.jpg','12345678910','xxxx','xxx地址','xxxx','xxx');
 
-/*Table structure for table `meishidingdan` */
+/* 美食订单表结构 */
 
 DROP TABLE IF EXISTS `meishidingdan`;
 
@@ -82,11 +81,11 @@ CREATE TABLE `meishidingdan` (
   UNIQUE KEY `dingdanbianhao` (`dingdanbianhao`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1615534362236 DEFAULT CHARSET=utf8 COMMENT='美食订单';
 
-/*Data for the table `meishidingdan` */
+/* 美食订单表数据 */
 
 insert  into `meishidingdan`(`id`,`addtime`,`dingdanbianhao`,`meishimingcheng`,`dianpuzhanghao`,`dianpumingcheng`,`lianxidianhua`,`jiage`,`goumaishuliang`,`zongjiage`,`yonghuzhanghao`,`yonghuxingming`,`yonghushouji`,`peisongdizhi`,`xiadanshijian`,`sfsh`,`shhf`,`ispay`) values (51,'2021-03-12 15:27:34','订单编号1','美食名称1','店铺账号1','店铺名称1','联系电话1','价格1',1,'总价格1','用户账号1','用户姓名1','用户手机1','配送地址1','2021-03-12 15:27:34','是','','未支付'),(52,'2021-03-12 15:27:34','订单编号2','美食名称2','店铺账号2','店铺名称2','联系电话2','价格2',2,'总价格2','用户账号2','用户姓名2','用户手机2','配送地址2','2021-03-12 15:27:34','是','','未支付'),(53,'2021-03-12 15:27:34','订单编号3','美食名称3','店铺账号3','店铺名称3','联系电话3','价格3',3,'总价格3','用户账号3','用户姓名3','用户手机3','配送地址3','2021-03-12 15:27:34','是','','未支付'),(54,'2021-03-12 15:27:34','订单编号4','美食名称4','店铺账号4','店铺名称4','联系电话4','价格4',4,'总价格4','用户账号4','用户姓名4','用户手机4','配送地址4','2021-03-12 15:27:34','是','','未支付'),(55,'2021-03-12 15:27:34','订单编号5','美食名称5','店铺账号5','店铺名称5','联系电话5','价格5',5,'总价格5','用户账号5','用户姓名5','用户手机5','配送地址5','2021-03-12 15:27:34','是','','未支付'),(56,'2021-03-12 15:27:34','订单编号6','美食名称6','店铺账号6','店铺名称6','联系电话6','价格6',6,'总价格6','用户账号6','用户姓名6','用户手机6','配送地址6','2021-03-12 15:27:34','是','','未支付'),(1615534362235,'2021-03-12 15:32:41','202131215322468069099','xxx美食','1','xxx店铺','12345678910','111',22,'2442','2','xxx用户','12345678910','xxx小区','2021-03-12 15:32:29','是','马上安排人送过去','已支付');
 
-/*Table structure for table `meishifenlei` */
+/* 美食分类表结构 */
 
 DROP TABLE IF EXISTS `meishifenlei`;
 
@@ -98,11 +97,11 @@ CREATE TABLE `meishifenlei` (
   UNIQUE KEY `meishifenlei` (`meishifenlei`)
 ) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8 COMMENT='美食分类';
 
-/*Data for the table `meishifenlei` */
+/* 美食分类表数据 */
 
 insert  into `meishifenlei`(`id`,`addtime`,`meishifenlei`) values (31,'2021-03-12 15:27:34','快餐'),(32,'2021-03-12 15:27:34','西餐'),(33,'2021-03-12 15:27:34','美食分类3'),(34,'2021-03-12 15:27:34','美食分类4'),(35,'2021-03-12 15:27:34','美食分类5'),(36,'2021-03-12 15:27:34','美食分类6');
 
-/*Table structure for table `meishipingjia` */
+/* 美食评价表结构 */
 
 DROP TABLE IF EXISTS `meishipingjia`;
 
@@ -121,11 +120,11 @@ CREATE TABLE `meishipingjia` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1615534431687 DEFAULT CHARSET=utf8 COMMENT='美食评价';
 
-/*Data for the table `meishipingjia` */
+/* 美食评价表数据 */
 
 insert  into `meishipingjia`(`id`,`addtime`,`dianpuzhanghao`,`dianpumingcheng`,`meishimingcheng`,`yonghuzhanghao`,`yonghuxingming`,`tupian`,`pingfen`,`pingjianeirong`,`pingjiashijian`) values (61,'2021-03-12 15:27:34','店铺账号1','店铺名称1','美食名称1','用户账号1','用户姓名1','http://localhost:8080/foodie/upload/meishipingjia_tupian1.jpg','★★★★★','评价内容1','2021-03-12 15:27:34'),(62,'2021-03-12 15:27:34','店铺账号2','店铺名称2','美食名称2','用户账号2','用户姓名2','http://localhost:8080/foodie/upload/meishipingjia_tupian2.jpg','★★★★★','评价内容2','2021-03-12 15:27:34'),(63,'2021-03-12 15:27:34','店铺账号3','店铺名称3','美食名称3','用户账号3','用户姓名3','http://localhost:8080/foodie/upload/meishipingjia_tupian3.jpg','★★★★★','评价内容3','2021-03-12 15:27:34'),(64,'2021-03-12 15:27:34','店铺账号4','店铺名称4','美食名称4','用户账号4','用户姓名4','http://localhost:8080/foodie/upload/meishipingjia_tupian4.jpg','★★★★★','评价内容4','2021-03-12 15:27:34'),(65,'2021-03-12 15:27:34','店铺账号5','店铺名称5','美食名称5','用户账号5','用户姓名5','http://localhost:8080/foodie/upload/meishipingjia_tupian5.jpg','★★★★★','评价内容5','2021-03-12 15:27:34'),(66,'2021-03-12 15:27:34','店铺账号6','店铺名称6','美食名称6','用户账号6','用户姓名6','http://localhost:8080/foodie/upload/meishipingjia_tupian6.jpg','★★★★★','评价内容6','2021-03-12 15:27:34'),(1615534431686,'2021-03-12 15:33:50','1','xxx店铺','xxx美食','2','xxx用户','http://localhost:8080/foodie/upload/1615534424623.jpg','★★★★','asdsadasdasda','2021-03-25 00:00:00');
 
-/*Table structure for table `meishixinxi` */
+/* 美食信息表结构 */
 
 DROP TABLE IF EXISTS `meishixinxi`;
 
@@ -147,11 +146,11 @@ CREATE TABLE `meishixinxi` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1615534275727 DEFAULT CHARSET=utf8 COMMENT='美食信息';
 
-/*Data for the table `meishixinxi` */
+/* 美食信息表数据 */
 
 insert  into `meishixinxi`(`id`,`addtime`,`meishimingcheng`,`meishifenlei`,`dianpuzhanghao`,`dianpumingcheng`,`lianxidianhua`,`tupian`,`kouwei`,`tese`,`jiage`,`xiangqing`,`clicktime`,`clicknum`) values (41,'2021-03-12 15:27:34','美食名称1','美食分类1','店铺账号1','店铺名称1','联系电话1','http://localhost:8080/foodie/upload/meishixinxi_tupian1.jpg','口味1','特色1',1,'详情1','2021-03-12 15:27:34',1),(42,'2021-03-12 15:27:34','美食名称2','美食分类2','店铺账号2','店铺名称2','联系电话2','http://localhost:8080/foodie/upload/meishixinxi_tupian2.jpg','口味2','特色2',2,'详情2','2021-03-12 15:27:34',2),(43,'2021-03-12 15:27:34','美食名称3','美食分类3','店铺账号3','店铺名称3','联系电话3','http://localhost:8080/foodie/upload/meishixinxi_tupian3.jpg','口味3','特色3',3,'详情3','2021-03-12 15:31:54',4),(44,'2021-03-12 15:27:34','美食名称4','美食分类4','店铺账号4','店铺名称4','联系电话4','http://localhost:8080/foodie/upload/meishixinxi_tupian4.jpg','口味4','特色4',4,'详情4','2021-03-12 15:27:34',4),(45,'2021-03-12 15:27:34','美食名称5','美食分类5','店铺账号5','店铺名称5','联系电话5','http://localhost:8080/foodie/upload/meishixinxi_tupian5.jpg','口味5','特色5',5,'详情5','2021-03-12 15:27:34',5),(46,'2021-03-12 15:27:34','美食名称6','美食分类6','店铺账号6','店铺名称6','联系电话6','http://localhost:8080/foodie/upload/meishixinxi_tupian6.jpg','口味6','特色6',6,'详情6','2021-03-12 15:27:34',6),(1615534275726,'2021-03-12 15:31:15','xxx美食','快餐','1','xxx店铺','12345678910','http://localhost:8080/foodie/upload/1615534255031.jpg','xxxx','xx',111,'<h1>asdsadasd</h1><p>asdasdas</p>','2021-03-12 15:32:44',5);
 
-/*Table structure for table `news` */
+/* 美食资讯表结构 */
 
 DROP TABLE IF EXISTS `news`;
 
@@ -165,11 +164,11 @@ CREATE TABLE `news` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=87 DEFAULT CHARSET=utf8 COMMENT='美食资讯';
 
-/*Data for the table `news` */
+/* 美食资讯表数据 */
 
 insert  into `news`(`id`,`addtime`,`title`,`introduction`,`picture`,`content`) values (81,'2021-03-12 15:27:34','标题1','简介1','http://localhost:8080/foodie/upload/news_picture1.jpg','内容1'),(82,'2021-03-12 15:27:34','标题2','简介2','http://localhost:8080/foodie/upload/news_picture2.jpg','内容2'),(83,'2021-03-12 15:27:34','标题3','简介3','http://localhost:8080/foodie/upload/news_picture3.jpg','内容3'),(84,'2021-03-12 15:27:34','标题4','简介4','http://localhost:8080/foodie/upload/news_picture4.jpg','内容4'),(85,'2021-03-12 15:27:34','标题5','简介5','http://localhost:8080/foodie/upload/news_picture5.jpg','内容5'),(86,'2021-03-12 15:27:34','标题6','简介6','http://localhost:8080/foodie/upload/news_picture6.jpg','内容6');
 
-/*Table structure for table `storeup` */
+/* 收藏表结构 */
 
 DROP TABLE IF EXISTS `storeup`;
 
@@ -184,11 +183,11 @@ CREATE TABLE `storeup` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1615534355231 DEFAULT CHARSET=utf8 COMMENT='收藏表';
 
-/*Data for the table `storeup` */
+/* 收藏表数据 */
 
 insert  into `storeup`(`id`,`addtime`,`userid`,`refid`,`tablename`,`name`,`picture`) values (1615534355230,'2021-03-12 15:32:34',1615534336642,1615534275726,'meishixinxi','xxx美食','http://localhost:8080/foodie/upload/1615534255031.jpg');
 
-/*Table structure for table `token` */
+/* Token 表结构 */
 
 DROP TABLE IF EXISTS `token`;
 
@@ -204,11 +203,11 @@ CREATE TABLE `token` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='token表';
 
-/*Data for the table `token` */
+/* Token 表数据 */
 
-insert  into `token`(`id`,`userid`,`username`,`tablename`,`role`,`token`,`addtime`,`expiratedtime`) values (1,1,'abo','users','管理员','a2erb7bo4646wydaqpt17qnz5593k2nn','2021-03-12 15:29:44','2021-03-12 16:29:44'),(2,1615534171319,'1','meishidian','美食店','7yd8vewych0crafeslntiusxa66pzc9c','2021-03-12 15:30:31','2021-03-12 16:33:10'),(3,1615534336642,'2','yonghu','用户','554a942wfy9a7ewllglkipsafz3umcmr','2021-03-12 15:32:21','2021-03-12 16:33:33');
+insert  into `token`(`id`,`userid`,`username`,`tablename`,`role`,`token`,`addtime`,`expiratedtime`) values (1,1,'foodie','users','管理员','a2erb7bo4646wydaqpt17qnz5593k2nn','2025-11-21 00:00:00','2025-11-21 01:00:00'),(2,1615534171319,'1','meishidian','美食店','7yd8vewych0crafeslntiusxa66pzc9c','2025-11-21 00:00:00','2025-11-21 01:00:00'),(3,1615534336642,'2','yonghu','用户','554a942wfy9a7ewllglkipsafz3umcmr','2025-11-21 00:00:00','2025-11-21 01:00:00');
 
-/*Table structure for table `users` */
+/* 管理员表结构 */
 
 DROP TABLE IF EXISTS `users`;
 
@@ -221,11 +220,11 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='用户表';
 
-/*Data for the table `users` */
+/* 管理员表数据 */
 
-insert  into `users`(`id`,`username`,`password`,`role`,`addtime`) values (1,'abo','abo','管理员','2021-03-12 15:27:34');
+insert  into `users`(`id`,`username`,`password`,`role`,`addtime`) values (1,'foodie','foodie','管理员','2025-11-21 00:00:00');
 
-/*Table structure for table `yonghu` */
+/* 用户表结构 */
 
 DROP TABLE IF EXISTS `yonghu`;
 
@@ -244,11 +243,8 @@ CREATE TABLE `yonghu` (
   UNIQUE KEY `yonghuzhanghao` (`yonghuzhanghao`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1615534336643 DEFAULT CHARSET=utf8 COMMENT='用户';
 
-/*Data for the table `yonghu` */
+/* 用户表数据 */
 
 insert  into `yonghu`(`id`,`addtime`,`yonghuzhanghao`,`mima`,`yonghuxingming`,`xingbie`,`nianling`,`touxiang`,`yonghushouji`,`peisongdizhi`) values (11,'2021-03-12 15:27:34','1','1','用户姓名1','男',1,'http://localhost:8080/foodie/upload/yonghu_touxiang1.jpg','13823888881','配送地址1'),(12,'2021-03-12 15:27:34','用户2','123456','用户姓名2','男',2,'http://localhost:8080/foodie/upload/yonghu_touxiang2.jpg','13823888882','配送地址2'),(13,'2021-03-12 15:27:34','用户3','123456','用户姓名3','男',3,'http://localhost:8080/foodie/upload/yonghu_touxiang3.jpg','13823888883','配送地址3'),(14,'2021-03-12 15:27:34','用户4','123456','用户姓名4','男',4,'http://localhost:8080/foodie/upload/yonghu_touxiang4.jpg','13823888884','配送地址4'),(15,'2021-03-12 15:27:34','用户5','123456','用户姓名5','男',5,'http://localhost:8080/foodie/upload/yonghu_touxiang5.jpg','13823888885','配送地址5'),(16,'2021-03-12 15:27:34','用户6','123456','用户姓名6','男',6,'http://localhost:8080/foodie/upload/yonghu_touxiang6.jpg','13823888886','配送地址6'),(1615534336642,'2021-03-12 15:32:16','2','2','xxx用户','男',22,'http://localhost:8080/foodie/upload/1615534374488.jpg','12345678910','xxx小区');
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+SET FOREIGN_KEY_CHECKS = 1;

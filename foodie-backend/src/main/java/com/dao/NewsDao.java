@@ -16,7 +16,7 @@ import com.entity.view.NewsView;
  * 
  * @author 
  * @email 
- * @date 2021-03-12 15:27:04
+ * @date 2025-11-12 15:27:04
  */
 public interface NewsDao extends BaseMapper<NewsEntity> {
 	
