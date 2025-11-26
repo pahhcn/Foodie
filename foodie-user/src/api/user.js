@@ -2,10 +2,18 @@ import request from '@/utils/request'
 
 // 登录
 export const login = (data) => {
+  // 将 JSON 数据转换为表单格式
+  const formData = new URLSearchParams()
+  formData.append('username', data.username)
+  formData.append('password', data.password)
+  
   return request({
     url: '/yonghu/login',
     method: 'post',
-    data
+    data: formData,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
   })
 }
 

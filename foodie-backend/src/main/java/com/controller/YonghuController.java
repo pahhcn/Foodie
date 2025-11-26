@@ -65,7 +65,7 @@ public class YonghuController {
 		}
 		
 		String token = tokenService.generateToken(user.getId(), username,"yonghu",  "用户" );
-		return R.ok().put("token", token);
+		return R.ok().put("token", token).put("userid", user.getId());
 	}
 	
 	/**
