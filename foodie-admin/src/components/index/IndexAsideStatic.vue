@@ -152,8 +152,8 @@ export default {
 <style lang="scss" scoped>
 .admin-sidebar {
   height: 100vh;
-  background: #fff;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   transition: width 0.3s;
   position: fixed;
@@ -166,7 +166,7 @@ export default {
   height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
-  padding: 16px 0;
+  padding: 20px 0;
 
   // 自定义滚动条
   &::-webkit-scrollbar {
@@ -178,11 +178,11 @@ export default {
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #d0d0d0;
+    background: linear-gradient(180deg, #d0d0d0 0%, #b0b0b0 100%);
     border-radius: 3px;
 
     &:hover {
-      background: #b0b0b0;
+      background: linear-gradient(180deg, #b0b0b0 0%, #909090 100%);
     }
   }
 }
@@ -200,27 +200,30 @@ export default {
     .menu-icon {
       font-size: 18px;
       margin-right: 12px;
-      transition: all 0.3s;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .menu-title {
       font-size: 14px;
       font-weight: 500;
       flex: 1;
+      transition: all 0.3s;
     }
   }
 
   // 一级菜单项
   .menu-item {
-    height: 48px;
-    line-height: 48px;
-    margin: 0 12px 8px;
-    padding: 0 16px !important;
-    border-radius: 10px;
+    height: 50px;
+    line-height: 50px;
+    margin: 0 12px 10px;
+    padding: 0 18px !important;
+    border-radius: 12px;
     color: #606266;
-    transition: all 0.3s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 
     &::before {
       content: '';
@@ -232,55 +235,94 @@ export default {
       background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
       border-radius: 0 4px 4px 0;
       transform: translateX(-4px);
-      transition: transform 0.3s;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(30, 60, 114, 0.05) 0%, rgba(42, 82, 152, 0.05) 100%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      border-radius: 12px;
     }
 
     .menu-icon {
       color: #909399;
+      position: relative;
+      z-index: 1;
+    }
+
+    .menu-title {
+      position: relative;
+      z-index: 1;
     }
 
     &:hover {
-      background: linear-gradient(90deg, rgba(30, 60, 114, 0.08) 0%, transparent 100%);
+      background: #fff;
       color: #1e3c72;
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(30, 60, 114, 0.15);
 
       &::before {
         transform: translateX(0);
+        width: 5px;
+      }
+
+      &::after {
+        opacity: 1;
+      }
+
+      .menu-icon {
+        color: #1e3c72;
+        transform: scale(1.15) rotate(5deg);
+      }
+
+      .menu-title {
+        font-weight: 600;
+      }
+    }
+
+    &.is-active {
+      background: linear-gradient(135deg, rgba(30, 60, 114, 0.1) 0%, rgba(42, 82, 152, 0.08) 100%);
+      color: #1e3c72;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(30, 60, 114, 0.2);
+      transform: translateX(4px);
+
+      &::before {
+        transform: translateX(0);
+        width: 5px;
+        box-shadow: 2px 0 8px rgba(30, 60, 114, 0.3);
       }
 
       .menu-icon {
         color: #1e3c72;
         transform: scale(1.1);
       }
-    }
 
-    &.is-active {
-      background: linear-gradient(90deg, rgba(30, 60, 114, 0.12) 0%, transparent 100%);
-      color: #1e3c72;
-      font-weight: 600;
-
-      &::before {
-        transform: translateX(0);
-      }
-
-      .menu-icon {
-        color: #1e3c72;
+      .menu-title {
+        font-weight: 600;
       }
     }
   }
 
   // 子菜单
   .menu-submenu {
-    margin: 0 12px 8px;
+    margin: 0 12px 10px;
 
     ::v-deep .el-submenu__title {
-      height: 48px;
-      line-height: 48px;
-      padding: 0 16px !important;
-      border-radius: 10px;
+      height: 50px;
+      line-height: 50px;
+      padding: 0 18px !important;
+      border-radius: 12px;
       color: #606266;
-      transition: all 0.3s;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
+      background: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 
       &::before {
         content: '';
@@ -292,35 +334,66 @@ export default {
         background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
         border-radius: 0 4px 4px 0;
         transform: translateX(-4px);
-        transition: transform 0.3s;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(30, 60, 114, 0.05) 0%, rgba(42, 82, 152, 0.05) 100%);
+        opacity: 0;
+        transition: opacity 0.3s;
+        border-radius: 12px;
       }
 
       .menu-icon {
         color: #909399;
+        position: relative;
+        z-index: 1;
+      }
+
+      .menu-title {
+        position: relative;
+        z-index: 1;
       }
 
       .el-submenu__icon-arrow {
-        right: 16px;
+        right: 18px;
         font-size: 12px;
         color: #909399;
-        transition: all 0.3s;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        z-index: 1;
       }
 
       &:hover {
-        background: linear-gradient(90deg, rgba(30, 60, 114, 0.08) 0%, transparent 100%);
+        background: #fff;
         color: #1e3c72;
+        transform: translateX(4px);
+        box-shadow: 0 4px 12px rgba(30, 60, 114, 0.15);
 
         &::before {
           transform: translateX(0);
+          width: 5px;
+        }
+
+        &::after {
+          opacity: 1;
         }
 
         .menu-icon {
           color: #1e3c72;
-          transform: scale(1.1);
+          transform: scale(1.15) rotate(5deg);
+        }
+
+        .menu-title {
+          font-weight: 600;
         }
 
         .el-submenu__icon-arrow {
           color: #1e3c72;
+          transform: translateX(2px);
         }
       }
     }
@@ -329,6 +402,13 @@ export default {
       ::v-deep .el-submenu__title {
         color: #1e3c72;
         font-weight: 600;
+        background: linear-gradient(135deg, rgba(30, 60, 114, 0.08) 0%, rgba(42, 82, 152, 0.06) 100%);
+        box-shadow: 0 2px 8px rgba(30, 60, 114, 0.1);
+
+        &::before {
+          transform: translateX(0);
+          width: 5px;
+        }
 
         .menu-icon {
           color: #1e3c72;
@@ -336,41 +416,66 @@ export default {
 
         .el-submenu__icon-arrow {
           color: #1e3c72;
+          transform: rotate(180deg);
         }
       }
     }
 
     // 子菜单列表
     ::v-deep .el-menu {
-      background: #f8f9fa;
-      border-radius: 8px;
-      margin: 4px 0 8px;
-      padding: 4px 0;
+      background: linear-gradient(135deg, #f8f9fa 0%, #f0f2f5 100%);
+      border-radius: 10px;
+      margin: 6px 0 10px;
+      padding: 6px 0;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
     }
 
     // 子菜单项
     .submenu-item {
-      height: 42px;
-      line-height: 42px;
-      padding: 0 16px 0 48px !important;
+      height: 44px;
+      line-height: 44px;
+      padding: 0 18px 0 50px !important;
       margin: 0 8px;
-      border-radius: 8px;
+      border-radius: 10px;
       color: #606266;
       font-size: 13px;
-      transition: all 0.3s;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      background: transparent;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 32px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #c0c4cc;
+        transition: all 0.3s;
+      }
 
       i {
         margin-right: 8px;
         font-size: 14px;
         color: #c0c4cc;
         transition: all 0.3s;
+        display: none;
       }
 
       &:hover {
         background: #fff;
         color: #1e3c72;
-        padding-left: 52px !important;
-        box-shadow: 0 2px 8px rgba(30, 60, 114, 0.1);
+        padding-left: 54px !important;
+        box-shadow: 0 3px 10px rgba(30, 60, 114, 0.12);
+        transform: translateX(2px);
+
+        &::before {
+          background: #1e3c72;
+          transform: translateY(-50%) scale(1.3);
+          box-shadow: 0 0 8px rgba(30, 60, 114, 0.4);
+        }
 
         i {
           color: #1e3c72;
@@ -381,7 +486,14 @@ export default {
         background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
         color: #fff;
         font-weight: 600;
-        box-shadow: 0 2px 8px rgba(30, 60, 114, 0.3);
+        box-shadow: 0 4px 12px rgba(30, 60, 114, 0.35);
+        transform: translateX(2px);
+
+        &::before {
+          background: #fff;
+          transform: translateY(-50%) scale(1.4);
+          box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+        }
 
         i {
           color: #fff;
