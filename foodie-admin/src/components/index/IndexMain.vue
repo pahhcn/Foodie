@@ -1,124 +1,57 @@
 <template>
-	<el-main>
-		<bread-crumbs :title="title" class="bread-crumbs"></bread-crumbs>
-		<router-view class="router-view"></router-view>
-	</el-main>
+  <div class="main-container">
+    <div class="main-content">
+      <router-view></router-view>
+    </div>
+  </div>
 </template>
+
 <script>
-	import menu from "@/utils/menu";
-	export default {
-		data() {
-			return {
-				menuList: [],
-				role: "",
-				currentIndex: -2,
-				itemMenu: [],
-				title: ''
-			};
-		},
-		mounted() {
-			let menus = menu.list();
-			this.menuList = menus;
-			this.role = this.$storage.get("role");
-		},
-		methods: {
-			menuHandler(menu) {
-				this.$router.push({
-					name: menu.tableName
-				});
-				this.title = menu.menu;
-			},
-			titleChange(index, menus) {
-				this.currentIndex = index
-				this.itemMenu = menus;
-				console.log(menus);
-			},
-			homeChange(index) {
-				this.itemMenu = [];
-				this.title = ""
-				this.currentIndex = index
-				this.$router.push({
-					name: 'home'
-				});
-			},
-			centerChange(index) {
-				this.itemMenu = [{
-					"buttons": ["新增", "查看", "修改", "删除"],
-					"menu": "修改密码",
-					"tableName": "updatePassword"
-				}, {
-					"buttons": ["新增", "查看", "修改", "删除"],
-					"menu": "个人信息",
-					"tableName": "center"
-				}];
-				this.title = ""
-				this.currentIndex = index
-				this.$router.push({
-					name: 'home'
-				});
-			}
-		}
-	};
+export default {
+  name: 'IndexMain'
+}
 </script>
+
 <style lang="scss" scoped>
-	a {
-		text-decoration: none;
-		color: #555;
-	}
+.main-container {
+  position: fixed;
+  top: 64px;
+  left: 240px;
+  right: 0;
+  bottom: 0;
+  background: #f0f2f5;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: left 0.3s;
 
-	a:hover {
-		background: #00c292;
-	}
+  // 自定义滚动条
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
 
-	.nav-list {
-		width: 100%;
-		margin: 0 auto;
-		text-align: left;
-		margin-top: 20px;
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
 
-		.nav-title {
-			display: inline-block;
-			font-size: 15px;
-			color: #333;
-			padding: 15px 25px;
-			border: none;
-		}
+  &::-webkit-scrollbar-thumb {
+    background: #c0c0c0;
+    border-radius: 4px;
 
-		.nav-title.active {
-			color: #555;
-			cursor: default;
-			background-color: #fff;
-		}
-	}
+    &:hover {
+      background: #a0a0a0;
+    }
+  }
 
-	.nav-item {
-		margin-top: 20px;
-		background: #FFFFFF;
-		padding: 15px 0;
+  .main-content {
+    padding: 24px;
+    min-height: calc(100vh - 64px);
+  }
+}
 
-		.menu {
-			padding: 15px 25px;
-		}
-	}
-
-	.el-main {
-		background-color: #F6F8FA;
-		padding: 0 24px;
-		// padding-top: 60px;
-	}
-
-	.router-view {
-		padding: 10px;
-		margin-top: 10px;
-		background: #FFFFFF;
-		box-sizing: border-box;
-	}
-
-	.bread-crumbs {
-		width: 100%;
-		// border-bottom: 1px solid #e9eef3;
-		// border-top: 1px solid #e9eef3;
-		margin-top: 10px;
-		box-sizing: border-box;
-	}
+// 响应式设计
+@media (max-width: 768px) {
+  .main-container {
+    left: 64px;
+  }
+}
 </style>
