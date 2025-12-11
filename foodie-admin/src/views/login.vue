@@ -113,7 +113,7 @@
             <div class="role-selector">
               <div
                 v-for="item in roleList"
-                v-if="item.hasBackLogin === '是'"
+                v-if="item.hasBackLogin === '是' && item.roleName !== '用户'"
                 :key="item.roleName"
                 :class="['role-item', { active: loginForm.role === item.roleName }]"
                 @click="selectRole(item.roleName)"
@@ -222,8 +222,9 @@ export default {
     initRoleList() {
       const menus = menu.list();
       this.roleList = menus;
+      // 过滤掉"用户"角色，只保留管理员和美食店
+      const availableRoles = menus.filter(item => item.hasBackLogin === '是' && item.roleName !== '用户');
       // 如果只有一个角色，自动选中
-      const availableRoles = menus.filter(item => item.hasBackLogin === '是');
       if (availableRoles.length === 1) {
         this.loginForm.role = availableRoles[0].roleName;
       }
@@ -238,9 +239,7 @@ export default {
     getRoleIcon(roleName) {
       const iconMap = {
         '管理员': 'el-icon-user-solid',
-        '美食店': 'el-icon-s-shop',
-        '用户': 'el-icon-user',
-        '骑手': 'el-icon-bicycle'
+        '美食店': 'el-icon-s-shop'
       };
       return iconMap[roleName] || 'el-icon-s-custom';
     },
