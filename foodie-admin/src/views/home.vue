@@ -10,21 +10,27 @@
     </div>
 
     <!-- 统计卡片 -->
-    <el-row :gutter="20" class="stat-cards">
-      <el-col :xs="24" :sm="12" :md="6" v-for="(stat, index) in stats" :key="index">
-        <div class="stat-card">
-          <div :class="['stat-icon', stat.type]">
-            <i :class="stat.icon"></i>
+    <div class="stat-section">
+      <div class="demo-badge">
+        <i class="el-icon-info"></i>
+        静态数据演示
+      </div>
+      <el-row :gutter="20" class="stat-cards">
+        <el-col :xs="24" :sm="12" :md="6" v-for="(stat, index) in stats" :key="index">
+          <div class="stat-card">
+            <div :class="['stat-icon', stat.type]">
+              <i :class="stat.icon"></i>
+            </div>
+            <div class="stat-value">{{ stat.value }}</div>
+            <div class="stat-label">{{ stat.label }}</div>
+            <div class="stat-trend" :class="stat.trend > 0 ? 'up' : 'down'">
+              <i :class="stat.trend > 0 ? 'el-icon-top' : 'el-icon-bottom'"></i>
+              {{ Math.abs(stat.trend) }}%
+            </div>
           </div>
-          <div class="stat-value">{{ stat.value }}</div>
-          <div class="stat-label">{{ stat.label }}</div>
-          <div class="stat-trend" :class="stat.trend > 0 ? 'up' : 'down'">
-            <i :class="stat.trend > 0 ? 'el-icon-top' : 'el-icon-bottom'"></i>
-            {{ Math.abs(stat.trend) }}%
-          </div>
-        </div>
-      </el-col>
-    </el-row>
+        </el-col>
+      </el-row>
+    </div>
 
     <!-- 快捷操作 -->
     <div class="page-content" style="margin-top: 20px;">
@@ -47,11 +53,17 @@
     <!-- 数据分析 -->
     <el-row :gutter="20" style="margin-top: 20px;">
       <el-col :xs="24" :md="16">
-        <div class="page-content">
-          <h2 class="section-title">
-            <i class="el-icon-s-data"></i>
-            数据概览
-          </h2>
+        <div class="page-content" id="data-overview">
+          <div class="section-title-wrapper">
+            <h2 class="section-title">
+              <i class="el-icon-s-data"></i>
+              数据概览
+            </h2>
+            <div class="demo-badge-small">
+              <i class="el-icon-info"></i>
+              静态数据演示
+            </div>
+          </div>
           <div class="chart-container">
             <div id="salesChart" style="width: 100%; height: 300px;"></div>
           </div>
@@ -129,13 +141,13 @@ export default {
           name: '订单管理',
           icon: 'el-icon-s-order',
           color: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          path: '/dingdan'
+          path: '/meishidingdan'
         },
         {
           name: '商品管理',
           icon: 'el-icon-s-goods',
           color: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-          path: '/shangpin'
+          path: '/meishixinxi'
         },
         {
           name: '用户管理',
@@ -147,13 +159,13 @@ export default {
           name: '数据统计',
           icon: 'el-icon-s-data',
           color: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-          path: '/tongji'
+          path: 'scroll-to-chart'
         },
         {
           name: '系统设置',
           icon: 'el-icon-setting',
           color: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-          path: '/shezhi'
+          path: '/config'
         },
         {
           name: '个人中心',
@@ -350,7 +362,29 @@ export default {
     },
     
     handleAction(path) {
-      if (path) {
+      if (path === 'scroll-to-chart') {
+        // 滚动到数据概览部分
+        this.$nextTick(() => {
+          const chartElement = document.getElementById('salesChart');
+          if (chartElement) {
+            chartElement.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'center' 
+            });
+            // 添加高亮效果
+            const chartContainer = chartElement.closest('.page-content');
+            if (chartContainer) {
+              chartContainer.style.transition = 'all 0.3s';
+              chartContainer.style.boxShadow = '0 4px 20px rgba(30, 60, 114, 0.3)';
+              chartContainer.style.transform = 'scale(1.02)';
+              setTimeout(() => {
+                chartContainer.style.boxShadow = '0 2px 12px rgba(0, 0, 0, 0.05)';
+                chartContainer.style.transform = 'scale(1)';
+              }, 1000);
+            }
+          }
+        });
+      } else if (path) {
         this.$router.push(path);
       } else {
         this.$message.info('功能开发中...');
@@ -401,6 +435,66 @@ export default {
   border-radius: 12px;
   padding: 24px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+.stat-section {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.demo-badge {
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: pulse 2s infinite;
+  
+  i {
+    font-size: 14px;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.section-title-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.demo-badge-small {
+  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(243, 156, 18, 0.25);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  
+  i {
+    font-size: 12px;
+  }
 }
 
 .stat-cards {
