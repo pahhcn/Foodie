@@ -48,7 +48,7 @@ INSERT INTO `meishifenlei` (`id`, `addtime`, `meishifenlei`) VALUES
 -- ============================================
 
 INSERT INTO `meishidian` (`id`, `addtime`, `dianpuzhanghao`, `mima`, `dianpumingcheng`, `zhaopian`, `lianxidianhua`, `dianpujieshao`, `dianpudizhi`, `zhaopaimeishi`, `lianxiren`) VALUES
-(1001, DATE_SUB(NOW(), INTERVAL 180 DAY), 'laobeijing', '123456', '鑰佸寳浜偢閰遍潰棣?, 'https://picsum.photos/400/300?random=1001', '13812345678', '传承百年老北京味道，选用优质面粉手工制作面条，配以秘制炸酱，口感醇厚，回味无穷。店内环境古朴典雅，是品尝正宗北京小吃的绝佳选择。', '北京市东城区王府井大街138号', '炸酱面,京酱肉丝,糖醋里脊,老北京炸鸡', '张师傅'),
+(1001, DATE_SUB(NOW(), INTERVAL 180 DAY), 'laobeijing', '123456', '老北京炸酱面馆', 'https://picsum.photos/400/300?random=1001', '13812345678', '传承百年老北京京味道，选用优质面粉手工制作面条，配以秘制炸酱，口感醇厚，回味无穷。店内环境古朴典雅，是品尝正宗北京小吃的绝佳选择。', '北京市东城区王府井大街138号', '炸酱面,京酱肉丝,糖醋里脊,老北京京炸鸡', '张师傅'),
 (1002, DATE_SUB(NOW(), INTERVAL 150 DAY), 'chuancai', '123456', '川味小厨', 'https://picsum.photos/400/300?random=1002', '13923456789', '正宗川菜餐厅，以麻辣鲜香著称。选用四川本地优质食材，传承经典川菜制作工艺，让您在家门口就能品尝到地道的四川味道。', '北京市朝阳区三里屯路88号', '麻婆豆腐,宫保鸡丁,水煮鱼,回锅肉,夫妻肺片', '李师傅'),
 (1003, DATE_SUB(NOW(), INTERVAL 120 DAY), 'yueshi', '123456', '粤式茶餐厅', 'https://picsum.photos/400/300?random=1003', '15034567890', '正宗粤式茶餐厅，提供经典广式早茶和粤菜。师傅均来自广东，手艺精湛，食材新鲜，为您呈现最地道的粤式美食体验。', '上海市黄浦区南京东路200号', '叉烧包,虾饺,烧鹅,白切鸡,煲仔饭', '陈师傅'),
 (1004, DATE_SUB(NOW(), INTERVAL 100 DAY), 'riyue', '123456', '日式料理屋', 'https://picsum.photos/400/300?random=1004', '18845678901', '日式传统料理店，由日本主厨亲自掌勺。选用新鲜食材，严格遵循日式料理制作工艺，为您提供最正宗的日式美食体验。', '上海市徐汇区淮海中路666号', '寿司,刺身,天妇罗,拉面,日式烤肉', '山田先生'),
@@ -199,9 +199,9 @@ INSERT INTO `meishixinxi` (`id`, `addtime`, `meishimingcheng`, `meishifenlei`, `
 (3056, DATE_SUB(NOW(), INTERVAL 50 DAY), '黄焖鸡米饭', '快餐', 'huangmen', '黄焖鸡米饭', '13989012345', 'https://picsum.photos/400/300?random=3056', '不辣', '招牌菜', 28, '<p>经典黄焖鸡米饭，鸡肉鲜嫩，汤汁浓郁，配米饭食用更佳。</p>', DATE_SUB(NOW(), INTERVAL 5 DAY), 1680),
 (3057, DATE_SUB(NOW(), INTERVAL 45 DAY), '黄焖排骨', '快餐', 'huangmen', '黄焖鸡米饭', '13989012345', 'https://picsum.photos/400/300?random=3057', '不辣', '人气推荐', 32, '<p>经典黄焖排骨，排骨鲜嫩，汤汁浓郁，配米饭食用更佳。</p>', DATE_SUB(NOW(), INTERVAL 6 DAY), 980),
 (3058, DATE_SUB(NOW(), INTERVAL 40 DAY), '黄焖牛肉', '快餐', 'huangmen', '黄焖鸡米饭', '13989012345', 'https://picsum.photos/400/300?random=3058', '不辣', '招牌菜', 38, '<p>经典黄焖牛肉，牛肉鲜嫩，汤汁浓郁，配米饭食用更佳。</p>', DATE_SUB(NOW(), INTERVAL 7 DAY), 720),
-(3059, DATE_SUB(NOW(), INTERVAL 35 DAY), '炸酱面', '快餐', 'laobeijing', '老北京炸酱面馆', '13812345678', 'https://picsum.photos/400/300?random=3059', '不辣', '招牌菜', 25, '<p>经典老北京炸酱面，手工制作面条，配以秘制炸酱，口感醇厚。</p>', DATE_SUB(NOW(), INTERVAL 8 DAY), 1890),
-(3060, DATE_SUB(NOW(), INTERVAL 30 DAY), '京酱肉丝', '快餐', 'laobeijing', '老北京炸酱面馆', '13812345678', 'https://picsum.photos/400/300?random=3060', '不辣', '人气推荐', 32, '<p>经典老北京菜品，肉丝配以甜面酱，口感丰富。</p>', DATE_SUB(NOW(), INTERVAL 9 DAY), 1120),
-(3061, DATE_SUB(NOW(), INTERVAL 25 DAY), '糖醋里脊', '快餐', 'laobeijing', '老北京炸酱面馆', '13812345678', 'https://picsum.photos/400/300?random=3061', '酸甜', '招牌菜', 35, '<p>经典老北京菜品，里脊肉配以糖醋汁，口感酸甜。</p>', DATE_SUB(NOW(), INTERVAL 10 DAY), 980);
+(3059, DATE_SUB(NOW(), INTERVAL 35 DAY), '炸酱面', '快餐', 'laobeijing', '老北京炸酱面馆', '13812345678', 'https://picsum.photos/400/300?random=3059', '不辣', '招牌菜', 25, '老北京炸酱面馆', DATE_SUB(NOW(), INTERVAL 8 DAY), 1890),
+(3060, DATE_SUB(NOW(), INTERVAL 30 DAY), '京酱肉丝', '快餐', 'laobeijing', '老北京炸酱面馆', '13812345678', 'https://picsum.photos/400/300?random=3060', '不辣', '人气推荐', 32, '<p>经典老北京京菜品，肉丝配以甜面酱，口感丰富。</p>', DATE_SUB(NOW(), INTERVAL 9 DAY), 1120),
+(3061, DATE_SUB(NOW(), INTERVAL 25 DAY), '糖醋里脊', '快餐', 'laobeijing', '老北京炸酱面馆', '13812345678', 'https://picsum.photos/400/300?random=3061', '酸甜', '招牌菜', 35, '<p>经典老北京京菜品，里脊肉配以糖醋汁，口感酸甜。</p>', DATE_SUB(NOW(), INTERVAL 10 DAY), 980);
 
 -- 甜品类（8道）
 INSERT INTO `meishixinxi` (`id`, `addtime`, `meishimingcheng`, `meishifenlei`, `dianpuzhanghao`, `dianpumingcheng`, `lianxidianhua`, `tupian`, `kouwei`, `tese`, `jiage`, `xiangqing`, `clicktime`, `clicknum`) VALUES
