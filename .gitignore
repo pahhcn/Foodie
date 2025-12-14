@@ -143,6 +143,3 @@ tmp/
 .env.development.local
 .env.test.local
 .env.production.local
-
-# ÐÞ¸´½Å±¾
-fix_*

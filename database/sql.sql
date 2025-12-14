@@ -67,7 +67,7 @@ CREATE TABLE `meishidingdan` (
   `dianpumingcheng` varchar(200) DEFAULT NULL COMMENT '店铺名称',
   `lianxidianhua` varchar(200) DEFAULT NULL COMMENT '联系电话',
   `jiage` varchar(200) DEFAULT NULL COMMENT '价格',
-  `goumaishuliang` int(11) NOT NULL DEFAULT 1 COMMENT '购买数量',
+  `goumaishuliang` int(11) NOT NULL COMMENT '购买数量',
   `zongjiage` varchar(200) DEFAULT NULL COMMENT '总价格',
   `yonghuzhanghao` varchar(200) DEFAULT NULL COMMENT '用户账号',
   `yonghuxingming` varchar(200) DEFAULT NULL COMMENT '用户姓名',

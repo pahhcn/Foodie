@@ -99,7 +99,6 @@ public class NewsController {
     /**
      * 后端详情
      */
-	@IgnoreAuth
     @RequestMapping("/info/{id}")
     public R info(@PathVariable("id") Long id){
         NewsEntity news = newsService.selectById(id);

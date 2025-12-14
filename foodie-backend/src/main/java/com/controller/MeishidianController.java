@@ -167,7 +167,6 @@ public class MeishidianController {
     /**
      * 后端详情
      */
-	@IgnoreAuth
     @RequestMapping("/info/{id}")
     public R info(@PathVariable("id") Long id){
         MeishidianEntity meishidian = meishidianService.selectById(id);

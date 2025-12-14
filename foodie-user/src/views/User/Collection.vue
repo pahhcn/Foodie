@@ -1,196 +1,92 @@
 <template>
-  <div class="collection-page">
+  <div class="collection">
     <h2>我的收藏</h2>
     
-    <!-- 分类标签 -->
-    <el-tabs v-model="activeTab" @tab-change="handleTabChange">
-      <el-tab-pane label="美食收藏" name="meishixinxi">
-        <div v-loading="loading" class="collection-list">
-          <el-empty v-if="!collections.length && !loading" description="暂无收藏" />
-          
-          <el-row v-else :gutter="20">
-            <el-col 
-              v-for="item in collections" 
-              :key="item.id"
-              :xs="12" :sm="8" :md="6"
-            >
-              <el-card 
-                class="collection-card" 
-                :body-style="{ padding: '0px' }"
-                shadow="hover"
-              >
-                <el-image 
-                  :src="getPictureUrl(item.picture)" 
-                  fit="cover"
-                  style="width: 100%; height: 180px; cursor: pointer;"
-                  @click="goToDetail(item)"
-                >
-                  <template #error>
-                    <div class="image-slot">
-                      <el-icon><Picture /></el-icon>
-                    </div>
-                  </template>
-                </el-image>
-                <div class="card-content">
-                  <h3 @click="goToDetail(item)">{{ item.name }}</h3>
-                  <div class="card-footer">
-                    <span class="time">{{ formatTime(item.addtime) }}</span>
-                    <el-button 
-                      type="danger" 
-                      size="small"
-                      :icon="Delete"
-                      @click="handleDelete(item.id)"
-                    >
-                      删除
-                    </el-button>
-                  </div>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
-        </div>
-      </el-tab-pane>
+    <div v-loading="loading">
+      <el-empty v-if="!list.length && !loading" description="暂无收藏" />
       
-      <el-tab-pane label="店铺收藏" name="meishidian">
-        <div v-loading="loading" class="collection-list">
-          <el-empty v-if="!collections.length && !loading" description="暂无收藏" />
-          
-          <el-row v-else :gutter="20">
-            <el-col 
-              v-for="item in collections" 
-              :key="item.id"
-              :xs="12" :sm="8" :md="6"
-            >
-              <el-card 
-                class="collection-card" 
-                :body-style="{ padding: '0px' }"
-                shadow="hover"
-              >
-                <el-image 
-                  :src="getPictureUrl(item.picture)" 
-                  fit="cover"
-                  style="width: 100%; height: 180px; cursor: pointer;"
-                  @click="goToDetail(item)"
-                >
-                  <template #error>
-                    <div class="image-slot">
-                      <el-icon><Picture /></el-icon>
-                    </div>
-                  </template>
-                </el-image>
-                <div class="card-content">
-                  <h3 @click="goToDetail(item)">{{ item.name }}</h3>
-                  <div class="card-footer">
-                    <span class="time">{{ formatTime(item.addtime) }}</span>
-                    <el-button 
-                      type="danger" 
-                      size="small"
-                      :icon="Delete"
-                      @click="handleDelete(item.id)"
-                    >
-                      删除
-                    </el-button>
-                  </div>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
-        </div>
-      </el-tab-pane>
-    </el-tabs>
+      <el-row v-else :gutter="20">
+        <el-col 
+          v-for="item in list" 
+          :key="item.id"
+          :xs="12" :sm="8" :md="6"
+        >
+          <el-card class="collection-card" shadow="hover">
+            <el-image 
+              :src="item.picture" 
+              fit="cover"
+              style="width: 100%; height: 150px; border-radius: 4px;"
+            />
+            <h3>{{ item.name }}</h3>
+            <div class="actions">
+              <el-button size="small" @click="viewDetail(item)">查看</el-button>
+              <el-button size="small" type="danger" @click="removeCollection(item.id)">
+                取消收藏
+              </el-button>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getCollectionList, deleteCollection } from '@/api/collection'
+import { getCollectionList, removeCollection as removeCollectionApi } from '@/api/common'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Delete, Picture } from '@element-plus/icons-vue'
 
 const router = useRouter()
-
-const activeTab = ref('meishixinxi')
-const collections = ref([])
+const list = ref([])
 const loading = ref(false)
 
 onMounted(() => {
-  loadCollections()
+  loadList()
 })
 
-const handleTabChange = () => {
-  loadCollections()
-}
-
-const loadCollections = async () => {
+const loadList = async () => {
   loading.value = true
   try {
+    const username = localStorage.getItem('adminName')
     const res = await getCollectionList({
       page: 1,
       limit: 100,
-      tablename: activeTab.value
+      userid: localStorage.getItem('userid')
     })
-    collections.value = res.data.list || []
+    list.value = res.data.list || []
   } catch (error) {
-    console.error('加载收藏失败：', error)
-    ElMessage.error('加载收藏失败')
+    console.error('加载失败：', error)
   } finally {
     loading.value = false
   }
 }
 
-const getPictureUrl = (picture) => {
-  if (!picture) return ''
-  // 如果是完整 URL，直接返回
-  if (picture.startsWith('http')) {
-    return picture
-  }
-  // 如果是多张图片，取第一张
-  const firstPic = picture.split(',')[0]
-  // 拼接完整 URL
-  return `http://localhost:8080/foodie/upload/${firstPic}`
+const viewDetail = (item) => {
+  router.push(`/food/${item.refid}`)
 }
 
-const formatTime = (time) => {
-  if (!time) return ''
-  const date = new Date(time)
-  return date.toLocaleDateString('zh-CN')
-}
-
-const goToDetail = (item) => {
-  if (item.tablename === 'meishixinxi') {
-    router.push(`/food/${item.refid}`)
-  } else if (item.tablename === 'meishidian') {
-    router.push(`/shop/${item.refid}`)
-  }
-}
-
-const handleDelete = async (id) => {
+const removeCollection = async (id) => {
   try {
-    await ElMessageBox.confirm(
-      '确认删除该收藏吗？',
-      '删除确认',
-      {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }
-    )
+    await ElMessageBox.confirm('确认取消收藏吗？', '提示', {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
     
-    await deleteCollection([id])
-    ElMessage.success('删除成功')
-    await loadCollections()
+    await removeCollectionApi(id)
+    ElMessage.success('已取消收藏')
+    await loadList()
   } catch (error) {
     if (error !== 'cancel') {
-      console.error('删除失败：', error)
-      ElMessage.error('删除失败')
+      console.error('取消收藏失败：', error)
     }
   }
 }
 </script>
 
 <style scoped>
-.collection-page {
+.collection {
   padding: 20px;
 }
 
@@ -200,58 +96,21 @@ h2 {
   margin-bottom: 24px;
 }
 
-.collection-list {
-  min-height: 400px;
-}
-
 .collection-card {
-  cursor: pointer;
-  transition: all 0.3s;
   margin-bottom: 20px;
+  cursor: pointer;
 }
 
-.collection-card:hover {
-  transform: translateY(-4px);
-}
-
-.image-slot {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  background: #f5f5f5;
-  color: #909399;
-  font-size: 32px;
-}
-
-.card-content {
-  padding: 12px;
-}
-
-.card-content h3 {
-  font-size: 15px;
-  font-weight: 500;
-  margin-bottom: 12px;
+.collection-card h3 {
+  font-size: 14px;
+  margin: 12px 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  cursor: pointer;
-  transition: color 0.3s;
 }
 
-.card-content h3:hover {
-  color: #409eff;
-}
-
-.card-footer {
+.actions {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.time {
-  font-size: 12px;
-  color: #999;
+  gap: 8px;
 }
 </style>

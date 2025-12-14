@@ -103,7 +103,6 @@ public class MeishixinxiController {
     /**
      * 后端详情
      */
-	@IgnoreAuth
     @RequestMapping("/info/{id}")
     public R info(@PathVariable("id") Long id){
         MeishixinxiEntity meishixinxi = meishixinxiService.selectById(id);

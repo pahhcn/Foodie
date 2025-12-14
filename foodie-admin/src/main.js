@@ -4,11 +4,14 @@ import App from '@/App.vue'
 import ElementUI from 'element-ui'
 import '@/assets/css/element-variables.scss'
 import '@/assets/css/style.scss'
+import '@/assets/styles/page-common.scss'
 // 加载路由
 // import router from '@/router/router-static.js';
 import router from '@/router/router-static.js';
 // 面包屑导航，注册为全局组件
 import BreadCrumbs from '@/components/common/BreadCrumbs'
+// 页面容器组件
+import PageContainer from '@/components/common/PageContainer'
 // 引入echart
 import echarts from 'echarts'
 // 引入echart主题
@@ -62,6 +65,7 @@ Vue.use(ElementUI, { size: 'medium', zIndex: 3000 });
 Vue.config.productionTip = false
 // 组件全局组件
 Vue.component('bread-crumbs', BreadCrumbs)
+Vue.component('page-container', PageContainer)
 Vue.component('file-upload', FileUpload)
 Vue.component('editor', Editor)
 //excel导出

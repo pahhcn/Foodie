@@ -52,25 +52,13 @@
               
               <el-divider />
               
-              <div class="action-buttons">
-                <el-button 
-                  type="primary" 
-                  size="large"
-                  @click="viewFoods"
-                >
-                  查看本店美食
-                </el-button>
-                <el-button 
-                  :type="isCollected ? 'warning' : 'default'"
-                  :icon="isCollected ? StarFilled : Star"
-                  size="large"
-                  @click="handleCollection"
-                  :loading="collectionLoading"
-                  style="margin-left: 12px;"
-                >
-                  {{ isCollected ? '已收藏' : '收藏' }}
-                </el-button>
-              </div>
+              <el-button 
+                type="primary" 
+                size="large"
+                @click="viewFoods"
+              >
+                查看本店美食
+              </el-button>
             </div>
           </el-col>
         </el-row>
@@ -98,7 +86,7 @@
                 @click="router.push(`/food/${item.id}`)"
               >
                 <el-image 
-                  :src="getImageUrl(item.tupian)" 
+                  :src="item.tupian?.split(',')[0]" 
                   fit="cover"
                   style="width: 100%; height: 160px;"
                 />
@@ -120,35 +108,25 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { useUserStore } from '@/stores/user'
 import request from '@/utils/request'
 import { getFoodList } from '@/api/food'
-import { addCollection, deleteCollection, checkCollection } from '@/api/collection'
-import { getImageUrl } from '@/utils/image'
-import { ElMessage } from 'element-plus'
-import { Star, StarFilled } from '@element-plus/icons-vue'
 
 const router = useRouter()
 const route = useRoute()
-const userStore = useUserStore()
 
 const shop = ref(null)
 const foods = ref([])
 const loading = ref(false)
 const foodsLoading = ref(false)
-const isCollected = ref(false)
-const collectionLoading = ref(false)
-const collectionId = ref(null)
 
 const images = computed(() => {
   if (!shop.value?.zhaopian) return []
-  return shop.value.zhaopian.split(',').map(img => getImageUrl(img))
+  return shop.value.zhaopian.split(',')
 })
 
 onMounted(async () => {
   await loadDetail()
   await loadFoods()
-  await checkIfCollected()
 })
 
 const loadDetail = async () => {
@@ -187,58 +165,6 @@ const viewFoods = () => {
     path: '/food/list',
     query: { shop: shop.value.dianpumingcheng }
   })
-}
-
-// 检查是否已收藏
-const checkIfCollected = async () => {
-  if (!userStore.isLoggedIn) return
-  
-  try {
-    const res = await checkCollection(route.params.id, 'meishidian')
-    if (res.data.list && res.data.list.length > 0) {
-      isCollected.value = true
-      collectionId.value = res.data.list[0].id
-    }
-  } catch (error) {
-    console.error('检查收藏状态失败：', error)
-  }
-}
-
-// 处理收藏
-const handleCollection = async () => {
-  if (!userStore.isLoggedIn) {
-    ElMessage.warning('请先登录')
-    router.push('/login')
-    return
-  }
-  
-  collectionLoading.value = true
-  try {
-    if (isCollected.value) {
-      // 取消收藏
-      await deleteCollection([collectionId.value])
-      isCollected.value = false
-      collectionId.value = null
-      ElMessage.success('已取消收藏')
-    } else {
-      // 添加收藏
-      const collectionData = {
-        refid: shop.value.id,
-        tablename: 'meishidian',
-        name: shop.value.dianpumingcheng,
-        picture: shop.value.zhaopian
-      }
-      await addCollection(collectionData)
-      isCollected.value = true
-      await checkIfCollected() // 重新获取收藏ID
-      ElMessage.success('收藏成功')
-    }
-  } catch (error) {
-    console.error('收藏操作失败：', error)
-    ElMessage.error('操作失败，请重试')
-  } finally {
-    collectionLoading.value = false
-  }
 }
 </script>
 
@@ -295,12 +221,6 @@ const handleCollection = async () => {
   font-size: 14px;
   color: #666;
   line-height: 1.8;
-}
-
-.action-buttons {
-  display: flex;
-  align-items: center;
-  margin-top: 20px;
 }
 
 .food-card {

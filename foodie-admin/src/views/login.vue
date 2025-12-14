@@ -1,397 +1,813 @@
-﻿<template>
-  <div>
-    <div class="container loginIn" style="backgroundImage: url(http://codegen.caihongy.cn/20201230/2de5336c3bc94b8791e8ba4a1b5252cb.jpg)">
+<template>
+  <div class="admin-login-container">
+    <!-- 左侧信息展示区 -->
+    <div class="login-left">
+      <div class="left-content">
+        <div class="brand-section">
+          <div class="brand-logo">
+            <i class="el-icon-s-shop"></i>
+          </div>
+          <h1 class="brand-title">食客在线</h1>
+          <p class="brand-subtitle">网上点餐系统 · 后台管理</p>
+        </div>
+        
+        <div class="feature-list">
+          <div class="feature-item" v-for="(item, index) in features" :key="index">
+            <div class="feature-icon">
+              <i :class="item.icon"></i>
+            </div>
+            <div class="feature-text">
+              <h3>{{ item.title }}</h3>
+              <p>{{ item.desc }}</p>
+            </div>
+          </div>
+        </div>
 
-      <div :class="2 == 1 ? 'left' : 2 == 2 ? 'left center' : 'left right'" style="backgroundColor: rgba(106, 0, 138, 0.43)">
-        <el-form class="login-form" label-position="left" :label-width="2 == 3 ? '56px' : '0px'">
-          <div class="title-container"><h3 class="title" style="color: rgba(248, 243, 246, 1)">网上点餐系统登录</h3></div>
-          <el-form-item :label="2 == 3 ? '用户名' : ''" :class="'style'+2">
-            <span v-if="2 != 3" class="svg-container" style="color:rgba(255, 255, 255, 1);line-height:44px"><svg-icon icon-class="user" /></span>
-            <el-input placeholder="请输入用户名" name="username" type="text" v-model="rulesForm.username" />
+        <div class="copyright">
+          <p>© 2025 食客在线. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右侧登录表单区 -->
+    <div class="login-right">
+      <div class="login-form-wrapper">
+        <div class="form-header">
+          <h2 class="form-title">管理员登录</h2>
+          <p class="form-desc">欢迎回来，请登录您的账户</p>
+        </div>
+
+        <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
+          <!-- 用户名 -->
+          <el-form-item prop="username">
+            <div class="form-item-label">
+              <i class="el-icon-user"></i>
+              <span>用户名</span>
+            </div>
+            <el-input
+              v-model="loginForm.username"
+              placeholder="请输入用户名"
+              prefix-icon="el-icon-user"
+              clearable
+              @keyup.enter.native="handleLogin"
+            >
+            </el-input>
           </el-form-item>
-          <el-form-item :label="2 == 3 ? '密码' : ''" :class="'style'+2">
-            <span v-if="2 != 3" class="svg-container" style="color:rgba(255, 255, 255, 1);line-height:44px"><svg-icon icon-class="password" /></span>
-            <el-input placeholder="请输入密码" name="password" type="password" v-model="rulesForm.password" />
+
+          <!-- 密码 -->
+          <el-form-item prop="password">
+            <div class="form-item-label">
+              <i class="el-icon-lock"></i>
+              <span>密码</span>
+            </div>
+            <el-input
+              v-model="loginForm.password"
+              type="password"
+              placeholder="请输入密码"
+              prefix-icon="el-icon-lock"
+              show-password
+              @keyup.enter.native="handleLogin"
+            >
+            </el-input>
           </el-form-item>
-          <el-form-item v-if="0 == '1'" class="code" :label="2 == 3 ? '验证码' : ''" :class="'style'+2">
-            <span v-if="2 != 3" class="svg-container" style="color:rgba(255, 255, 255, 1);line-height:44px"><svg-icon icon-class="code" /></span>
-            <el-input placeholder="请输入验证码" name="code" type="text" v-model="rulesForm.code" />
-            <div class="getCodeBt" @click="getRandCode(4)" style="height:44px;line-height:44px">
-              <span v-for="(item, index) in codes" :key="index" :style="{color:item.color,transform:item.rotate,fontSize:item.size}">{{ item.num }}</span>
+
+          <!-- 验证码 -->
+          <el-form-item v-if="captchaEnabled" prop="code">
+            <div class="form-item-label">
+              <i class="el-icon-picture"></i>
+              <span>验证码</span>
+            </div>
+            <div class="captcha-input-wrapper">
+              <el-input
+                v-model="loginForm.code"
+                placeholder="请输入验证码"
+                prefix-icon="el-icon-picture"
+                maxlength="4"
+                @keyup.enter.native="handleLogin"
+              >
+              </el-input>
+              <div class="captcha-display" @click="refreshCaptcha">
+                <span
+                  v-for="(item, index) in captchaCode"
+                  :key="index"
+                  :style="{
+                    color: item.color,
+                    transform: item.rotate,
+                    fontSize: item.size
+                  }"
+                  class="captcha-char"
+                >{{ item.char }}</span>
+                <div class="captcha-refresh">
+                  <i class="el-icon-refresh"></i>
+                </div>
+              </div>
             </div>
           </el-form-item>
-          <el-form-item label="角色" prop="loginInRole" class="role">
-            <el-radio
-              v-for="item in menus"
-	      v-if="item.hasBackLogin=='是'"
-              v-bind:key="item.roleName"
-              v-model="rulesForm.role"
-              :label="item.roleName"
-            >{{item.roleName}}</el-radio>
+
+          <!-- 角色选择 -->
+          <el-form-item prop="role">
+            <div class="form-item-label">
+              <i class="el-icon-s-custom"></i>
+              <span>登录角色</span>
+            </div>
+            <div class="role-selector">
+              <div
+                v-for="item in roleList"
+                v-if="item.hasBackLogin === '是' && item.roleName !== '用户'"
+                :key="item.roleName"
+                :class="['role-item', { active: loginForm.role === item.roleName }]"
+                @click="selectRole(item.roleName)"
+              >
+                <i :class="getRoleIcon(item.roleName)"></i>
+                <span>{{ item.roleName }}</span>
+              </div>
+            </div>
           </el-form-item>
-          <el-button type="primary" @click="login()" class="loginInBt" style="padding:0;font-size:16px;border-radius:4px;height:44px;line-height:44px;width:100%;backgroundColor:rgba(199, 21, 133, 1); borderColor:rgba(199, 21, 133, 1); color:rgba(255, 255, 255, 1)">{{'1' == '1' ? '登录' : 'login'}}</el-button>
-          <el-form-item class="setting">
-                                                            <div style="color:rgba(248, 245, 245, 1)" class="register" @click="register('meishidian')">注册美食店</div>
-                                                                                                                                                                                    <!-- <div style="color:rgba(248, 245, 245, 1)" class="reset">修改密码</div> -->
+
+          <!-- 记住密码 -->
+          <el-form-item class="remember-row">
+            <el-checkbox v-model="rememberMe">记住密码</el-checkbox>
+            <a class="forgot-password" @click="handleForgotPassword">忘记密码？</a>
           </el-form-item>
+
+          <!-- 登录按钮 -->
+          <el-form-item>
+            <el-button
+              type="primary"
+              :loading="loading"
+              class="login-btn"
+              @click="handleLogin"
+            >
+              <span v-if="!loading">立即登录</span>
+              <span v-else>登录中...</span>
+            </el-button>
+          </el-form-item>
+
+          <!-- 注册链接 -->
+          <div class="form-footer">
+            <span>还没有账号？</span>
+            <a @click="handleRegister" class="register-link">立即注册</a>
+          </div>
         </el-form>
       </div>
-
     </div>
   </div>
 </template>
+
 <script>
 import menu from "@/utils/menu";
+
 export default {
+  name: "AdminLogin",
   data() {
     return {
-      rulesForm: {
+      loginForm: {
         username: "",
         password: "",
-        role: "",
-        code: '',
+        code: "",
+        role: ""
       },
-      menus: [],
+      loginRules: {
+        username: [
+          { required: true, message: "请输入用户名", trigger: "blur" },
+          { min: 2, max: 20, message: "长度在 2 到 20 个字符", trigger: "blur" }
+        ],
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 3, max: 20, message: "长度在 3 到 20 个字符", trigger: "blur" }
+        ],
+        role: [
+          { required: true, message: "请选择登录角色", trigger: "change" }
+        ]
+      },
+      roleList: [],
+      loading: false,
+      rememberMe: false,
+      captchaEnabled: false,
+      captchaCode: [],
       tableName: "",
-      codes: [{
-        num: 1,
-        color: '#000',
-        rotate: '10deg',
-        size: '16px'
-      },{
-        num: 2,
-        color: '#000',
-        rotate: '10deg',
-        size: '16px'
-      },{
-        num: 3,
-        color: '#000',
-        rotate: '10deg',
-        size: '16px'
-      },{
-        num: 4,
-        color: '#000',
-        rotate: '10deg',
-        size: '16px'
-      }],
+      features: [
+        {
+          icon: "el-icon-s-data",
+          title: "数据统计",
+          desc: "实时查看订单、销售等数据"
+        },
+        {
+          icon: "el-icon-s-order",
+          title: "订单管理",
+          desc: "高效处理订单，提升服务质量"
+        },
+        {
+          icon: "el-icon-s-goods",
+          title: "商品管理",
+          desc: "轻松管理菜品信息和库存"
+        },
+        {
+          icon: "el-icon-s-custom",
+          title: "用户管理",
+          desc: "完善的用户信息管理系统"
+        }
+      ]
     };
   },
   mounted() {
-    let menus = menu.list();
-    this.menus = menus;
-  },
-  created() {
-    this.setInputColor()
-    this.getRandCode()
+    this.initRoleList();
+    if (this.captchaEnabled) {
+      this.generateCaptcha();
+    }
+    this.loadRememberedAccount();
   },
   methods: {
-    setInputColor(){
-      this.$nextTick(()=>{
-        document.querySelectorAll('.loginIn .el-input__inner').forEach(el=>{
-          el.style.backgroundColor = "rgba(255, 255, 255, 1)"
-          el.style.color = "rgba(51, 51, 51, 1)"
-          el.style.height = "44px"
-          el.style.lineHeight = "44px"
-          el.style.borderRadius = "4px"
-        })
-        document.querySelectorAll('.loginIn .style3 .el-form-item__label').forEach(el=>{
-          el.style.height = "44px"
-          el.style.lineHeight = "44px"
-        })
-        document.querySelectorAll('.loginIn .el-form-item__label').forEach(el=>{
-          el.style.color = "rgba(255, 255, 255, 1)"
-        })
-        setTimeout(()=>{
-          document.querySelectorAll('.loginIn .role .el-radio__label').forEach(el=>{
-            el.style.color = "#fff"
-          })
-        },350)
-      })
+    // 初始化角色列表
+    initRoleList() {
+      const menus = menu.list();
+      this.roleList = menus;
+      // 过滤掉"用户"角色，只保留管理员和美食店
+      const availableRoles = menus.filter(item => item.hasBackLogin === '是' && item.roleName !== '用户');
+      // 如果只有一个角色，自动选中
+      if (availableRoles.length === 1) {
+        this.loginForm.role = availableRoles[0].roleName;
+      }
+    },
 
+    // 选择角色
+    selectRole(roleName) {
+      this.loginForm.role = roleName;
     },
-    register(tableName){
-      this.$storage.set("loginTable", tableName);
-      this.$router.push({path:'/register'})
+
+    // 获取角色图标
+    getRoleIcon(roleName) {
+      const iconMap = {
+        '管理员': 'el-icon-user-solid',
+        '美食店': 'el-icon-s-shop'
+      };
+      return iconMap[roleName] || 'el-icon-s-custom';
     },
-    // 登陆
-    login() {
-      let code = ''
-      for(let i in this.codes) {
-        code += this.codes[i].num
+
+    // 生成验证码
+    generateCaptcha() {
+      const chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+      const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c'];
+      const sizes = ['18px', '20px', '22px', '24px'];
+      
+      this.captchaCode = [];
+      for (let i = 0; i < 4; i++) {
+        const char = chars[Math.floor(Math.random() * chars.length)];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const size = sizes[Math.floor(Math.random() * sizes.length)];
+        const rotate = `rotate(${Math.random() * 40 - 20}deg)`;
+        
+        this.captchaCode.push({ char, color, size, rotate });
       }
-	  if ('0' == '1' && !this.rulesForm.code) {
-	     this.$message.error("请输入验证码");
-	    return;
-	  }
-      if ('0' == '1' && this.rulesForm.code.toLowerCase() != code.toLowerCase()) {
-         this.$message.error("验证码输入有误");
-		this.getRandCode()
-        return;
-      }
-      if (!this.rulesForm.username) {
-         this.$message.error("请输入用户名");
-        return;
-      }
-      if (!this.rulesForm.password) {
-         this.$message.error("请输入密码");
-        return;
-      }
-      if (!this.rulesForm.role) {
-         this.$message.error("请选择角色");
-        return;
-      }
-      let menus = this.menus;
-      for (let i = 0; i < menus.length; i++) {
-        if (menus[i].roleName == this.rulesForm.role) {
-          this.tableName = menus[i].tableName;
+    },
+
+    // 刷新验证码
+    refreshCaptcha() {
+      this.generateCaptcha();
+      this.loginForm.code = '';
+    },
+
+    // 加载记住的账号
+    loadRememberedAccount() {
+      const remembered = localStorage.getItem('rememberedAccount');
+      if (remembered) {
+        try {
+          const account = JSON.parse(remembered);
+          this.loginForm.username = account.username;
+          this.loginForm.password = account.password;
+          this.rememberMe = true;
+        } catch (e) {
+          console.error('加载记住的账号失败', e);
         }
       }
-      this.$http({
-        url: `${this.tableName}/login?username=${this.rulesForm.username}&password=${this.rulesForm.password}`,
-        method: "post"
-      }).then(({ data }) => {
-        if (data && data.code === 0) {
-          this.$storage.set("Token", data.token);
-          this.$storage.set("role", this.rulesForm.role);
-          this.$storage.set("sessionTable", this.tableName);
-          this.$storage.set("adminName", this.rulesForm.username);
-          this.$router.replace({ path: "/index/" });
-        } else {
-          this.$message.error(data.msg);
+    },
+
+    // 保存账号
+    saveAccount() {
+      if (this.rememberMe) {
+        const account = {
+          username: this.loginForm.username,
+          password: this.loginForm.password
+        };
+        localStorage.setItem('rememberedAccount', JSON.stringify(account));
+      } else {
+        localStorage.removeItem('rememberedAccount');
+      }
+    },
+
+    // 登录
+    handleLogin() {
+      this.$refs.loginForm.validate(valid => {
+        if (!valid) {
+          return false;
         }
+
+        // 验证码校验
+        if (this.captchaEnabled) {
+          const inputCode = this.loginForm.code.toLowerCase();
+          const correctCode = this.captchaCode.map(item => item.char).join('').toLowerCase();
+          if (inputCode !== correctCode) {
+            this.$message.error('验证码错误');
+            this.refreshCaptcha();
+            return;
+          }
+        }
+
+        // 获取表名
+        const selectedRole = this.roleList.find(item => item.roleName === this.loginForm.role);
+        if (!selectedRole) {
+          this.$message.error('角色信息错误');
+          return;
+        }
+        this.tableName = selectedRole.tableName;
+
+        // 发送登录请求
+        this.loading = true;
+        this.$http({
+          url: `${this.tableName}/login?username=${this.loginForm.username}&password=${this.loginForm.password}`,
+          method: "post"
+        })
+          .then(({ data }) => {
+            if (data && data.code === 0) {
+              // 保存登录信息
+              this.$storage.set("Token", data.token);
+              this.$storage.set("role", this.loginForm.role);
+              this.$storage.set("sessionTable", this.tableName);
+              this.$storage.set("adminName", this.loginForm.username);
+              
+              // 保存账号
+              this.saveAccount();
+              
+              this.$message.success('登录成功');
+              
+              // 跳转到首页
+              setTimeout(() => {
+                this.$router.replace({ path: "/index/" });
+              }, 500);
+            } else {
+              this.$message.error(data.msg || '登录失败');
+              if (this.captchaEnabled) {
+                this.refreshCaptcha();
+              }
+            }
+          })
+          .catch(error => {
+            console.error('登录错误', error);
+            this.$message.error('登录失败，请检查网络连接');
+            if (this.captchaEnabled) {
+              this.refreshCaptcha();
+            }
+          })
+          .finally(() => {
+            this.loading = false;
+          });
       });
     },
-    getRandCode(len = 4){
-      this.randomString(len)
-    },
-    randomString(len = 4) {
-      let chars = [
-          "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",
-          "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v",
-          "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G",
-          "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
-          "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2",
-          "3", "4", "5", "6", "7", "8", "9"
-      ]
-      let colors = ["0", "1", "2","3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"]
-      let sizes = ['14', '15', '16', '17', '18']
 
-      let output = [];
-      for (let i = 0; i < len; i++) {
-        // 随机验证码
-        let key = Math.floor(Math.random()*chars.length)
-        this.codes[i].num = chars[key]
-        // 随机验证码颜色
-        let code = '#'
-        for (let j = 0; j < 6; j++) {
-          let key = Math.floor(Math.random()*colors.length)
-          code += colors[key]
-        }
-        this.codes[i].color = code
-        // 随机验证码方向
-        let rotate = Math.floor(Math.random()*60)
-        let plus = Math.floor(Math.random()*2)
-        if(plus == 1) rotate = '-'+rotate
-        this.codes[i].rotate = 'rotate('+rotate+'deg)'
-        // 随机验证码字体大小
-        let size = Math.floor(Math.random()*sizes.length)
-        this.codes[i].size = sizes[size]+'px'
-      }
+    // 忘记密码
+    handleForgotPassword() {
+      this.$message.info('请联系管理员重置密码');
     },
+
+    // 注册
+    handleRegister() {
+      this.$storage.set("loginTable", "meishidian");
+      this.$router.push({ path: '/register' });
+    }
   }
 };
 </script>
+
 <style lang="scss" scoped>
-.loginIn {
+.admin-login-container {
+  display: flex;
+  width: 100%;
   min-height: 100vh;
+  background: #f0f2f5;
+}
+
+// 左侧信息区
+.login-left {
+  flex: 1;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
   position: relative;
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
+  overflow: hidden;
 
-  .left {
+  &::before {
+    content: '';
     position: absolute;
-    left: 0;
-    top: 0;
-    width: 360px;
-    height: 100%;
+    width: 500px;
+    height: 500px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    top: -200px;
+    left: -200px;
+  }
 
-    .login-form {
-      background-color: transparent;
-      width: 100%;
-      right: inherit;
-      padding: 0 12px;
-      box-sizing: border-box;
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-    }
+  &::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 50%;
+    bottom: -150px;
+    right: -150px;
+  }
 
-    .title-container {
+  .left-content {
+    position: relative;
+    z-index: 1;
+    max-width: 500px;
+    color: #fff;
+
+    .brand-section {
       text-align: center;
-      font-size: 24px;
+      margin-bottom: 60px;
 
-      .title {
-        margin: 20px 0;
-      }
-    }
+      .brand-logo {
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 30px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
 
-    .el-form-item {
-      position: relative;
-
-      .svg-container {
-        padding: 6px 5px 6px 15px;
-        color: #889aa4;
-        vertical-align: middle;
-        display: inline-block;
-        position: absolute;
-        left: 0;
-        top: 0;
-        z-index: 1;
-        padding: 0;
-        line-height: 40px;
-        width: 30px;
-        text-align: center;
-      }
-
-      .el-input {
-        display: inline-block;
-        height: 40px;
-        width: 100%;
-
-        & ::v-deep input {
-          background: transparent;
-          border: 0px;
-          -webkit-appearance: none;
-          padding: 0 15px 0 30px;
+        i {
+          font-size: 50px;
           color: #fff;
-          height: 40px;
         }
       }
 
+      .brand-title {
+        font-size: 42px;
+        font-weight: 700;
+        margin: 0 0 15px 0;
+        letter-spacing: 2px;
+      }
+
+      .brand-subtitle {
+        font-size: 18px;
+        opacity: 0.9;
+        margin: 0;
+      }
     }
 
+    .feature-list {
+      .feature-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 30px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        transition: all 0.3s;
 
+        &:hover {
+          background: rgba(255, 255, 255, 0.12);
+          transform: translateX(10px);
+        }
+
+        .feature-icon {
+          width: 50px;
+          height: 50px;
+          background: rgba(255, 255, 255, 0.15);
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 20px;
+          flex-shrink: 0;
+
+          i {
+            font-size: 24px;
+            color: #fff;
+          }
+        }
+
+        .feature-text {
+          h3 {
+            font-size: 18px;
+            margin: 0 0 8px 0;
+            font-weight: 600;
+          }
+
+          p {
+            font-size: 14px;
+            margin: 0;
+            opacity: 0.8;
+            line-height: 1.6;
+          }
+        }
+      }
+    }
+
+    .copyright {
+      text-align: center;
+      margin-top: 60px;
+      opacity: 0.7;
+      font-size: 14px;
+    }
+  }
+}
+
+// 右侧表单区
+.login-right {
+  width: 520px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  box-shadow: -5px 0 20px rgba(0, 0, 0, 0.05);
+}
+
+.login-form-wrapper {
+  width: 100%;
+  max-width: 400px;
+
+  .form-header {
+    text-align: center;
+    margin-bottom: 40px;
+
+    .form-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1e3c72;
+      margin: 0 0 10px 0;
+    }
+
+    .form-desc {
+      font-size: 14px;
+      color: #8c8c8c;
+      margin: 0;
+    }
   }
 
-  .center {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 360px;
-    transform: translate3d(-50%,-50%,0);
-    height: 446px;
-    border-radius: 8px;
-  }
+  .login-form {
+    .el-form-item {
+      margin-bottom: 24px;
 
-  .right {
-    position: absolute;
-    left: inherit;
-    right: 0;
-    top: 0;
-    width: 360px;
-    height: 100%;
-  }
+      .form-item-label {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #333;
 
-  .code {
-    .el-form-item__content {
-      position: relative;
+        i {
+          margin-right: 6px;
+          color: #1e3c72;
+        }
+      }
 
-      .getCodeBt {
-        position: absolute;
-        right: 0;
-        top: 0;
-        line-height: 40px;
-        width: 100px;
-        background-color: rgba(51,51,51,0.4);
-        color: #fff;
+      ::v-deep .el-input__inner {
+        height: 44px;
+        line-height: 44px;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        font-size: 14px;
+        transition: all 0.3s;
+
+        &:focus {
+          border-color: #1e3c72;
+          box-shadow: 0 0 0 2px rgba(30, 60, 114, 0.1);
+        }
+      }
+
+      ::v-deep .el-input__prefix {
+        left: 12px;
+        color: #8c8c8c;
+      }
+
+      ::v-deep .el-input__suffix {
+        right: 12px;
+      }
+    }
+
+    // 验证码输入
+    .captcha-input-wrapper {
+      display: flex;
+      gap: 12px;
+
+      .el-input {
+        flex: 1;
+      }
+
+      .captcha-display {
+        width: 120px;
+        height: 44px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e8eaf0 100%);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+        user-select: none;
+        transition: all 0.3s;
+
+        &:hover {
+          transform: scale(1.05);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+          .captcha-refresh {
+            opacity: 1;
+          }
+        }
+
+        .captcha-char {
+          display: inline-block;
+          font-weight: 700;
+          margin: 0 2px;
+        }
+
+        .captcha-refresh {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 8px;
+          opacity: 0;
+          transition: opacity 0.3s;
+
+          i {
+            color: #fff;
+            font-size: 20px;
+          }
+        }
+      }
+    }
+
+    // 角色选择
+    .role-selector {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+
+      .role-item {
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
         text-align: center;
-        border-radius: 0 4px 4px 0;
-        height: 40px;
-        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.3s;
+        background: #fff;
+
+        i {
+          font-size: 24px;
+          color: #8c8c8c;
+          display: block;
+          margin-bottom: 8px;
+          transition: all 0.3s;
+        }
 
         span {
-          padding: 0 5px;
-          display: inline-block;
-          font-size: 16px;
-          font-weight: 600;
+          font-size: 14px;
+          color: #333;
+          font-weight: 500;
         }
-      }
 
-      .el-input {
-        & ::v-deep input {
-          padding: 0 130px 0 30px;
+        &:hover {
+          border-color: #1e3c72;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(30, 60, 114, 0.15);
+
+          i {
+            color: #1e3c72;
+            transform: scale(1.1);
+          }
+        }
+
+        &.active {
+          border-color: #1e3c72;
+          background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+          box-shadow: 0 4px 12px rgba(30, 60, 114, 0.3);
+
+          i {
+            color: #fff;
+          }
+
+          span {
+            color: #fff;
+          }
         }
       }
     }
-  }
 
-  .setting {
-    & ::v-deep .el-form-item__content {
-      padding: 0 15px;
-      box-sizing: border-box;
-      line-height: 32px;
-      height: 32px;
+    // 记住密码行
+    .remember-row {
+      margin-bottom: 24px;
+
+      ::v-deep .el-form-item__content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        line-height: normal;
+      }
+
+      .forgot-password {
+        font-size: 14px;
+        color: #1e3c72;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s;
+
+        &:hover {
+          color: #2a5298;
+          text-decoration: underline;
+        }
+      }
+    }
+
+    // 登录按钮
+    .login-btn {
+      width: 100%;
+      height: 44px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      border: none;
+      transition: all 0.3s;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(30, 60, 114, 0.4);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+
+    // 表单底部
+    .form-footer {
+      text-align: center;
+      margin-top: 20px;
       font-size: 14px;
-      color: #999;
-      margin: 0 !important;
+      color: #8c8c8c;
 
-      .register {
-        float: left;
-        width: 50%;
-      }
+      .register-link {
+        color: #1e3c72;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: 500;
+        margin-left: 5px;
+        transition: all 0.3s;
 
-      .reset {
-        float: right;
-        width: 50%;
-        text-align: right;
-      }
-    }
-  }
-
-  .style2 {
-    padding-left: 30px;
-
-    .svg-container {
-      left: -30px !important;
-    }
-
-    .el-input {
-      & ::v-deep input {
-        padding: 0 15px !important;
+        &:hover {
+          color: #2a5298;
+          text-decoration: underline;
+        }
       }
     }
   }
+}
 
-  .code.style2, .code.style3 {
-    .el-input {
-      & ::v-deep input {
-        padding: 0 115px 0 15px;
+// 响应式设计
+@media (max-width: 1024px) {
+  .login-left {
+    display: none;
+  }
+
+  .login-right {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .login-right {
+    padding: 20px;
+  }
+
+  .login-form-wrapper {
+    .form-header {
+      .form-title {
+        font-size: 24px;
+      }
+    }
+
+    .login-form {
+      .role-selector {
+        grid-template-columns: 1fr;
       }
     }
   }
-
-  .style3 {
-    & ::v-deep .el-form-item__label {
-      padding-right: 6px;
-    }
-
-    .el-input {
-      & ::v-deep input {
-        padding: 0 15px !important;
-      }
-    }
-  }
-
-  .role {
-    & ::v-deep .el-form-item__label {
-      width: 56px !important;
-    }
-
-    & ::v-deep .el-radio {
-      margin-right: 12px;
-    }
-  }
-
 }
 </style>

@@ -79,39 +79,11 @@ export const useUserStore = defineStore('user', () => {
   // 更新用户信息
   const updateUserInfo = async (data) => {
     try {
-      // 获取用户 ID
-      const userid = localStorage.getItem('userid')
-      if (!userid) {
-        throw new Error('用户未登录')
-      }
-      
-      // 构建更新数据（包含 ID）
-      const updateData = {
-        id: userid,
-        ...data
-      }
-      
-      // 如果密码为空，删除密码字段（不修改密码）
-      if (!updateData.mima) {
-        delete updateData.mima
-      }
-      
-      console.log('更新用户信息：', updateData)
-      
-      // 调用后端 API
-      const { updateUserInfo: updateUserInfoApi } = await import('@/api/user')
-      await updateUserInfoApi(updateData)
-      
-      // 更新本地状态
+      // 调用更新 API
       userInfo.value = { ...userInfo.value, ...data }
-      
-      // 重新获取用户信息以确保数据同步
-      await fetchUserInfo()
-      
       ElMessage.success('更新成功')
     } catch (error) {
       console.error('更新失败：', error)
-      ElMessage.error('更新失败，请重试')
       throw error
     }
   }
