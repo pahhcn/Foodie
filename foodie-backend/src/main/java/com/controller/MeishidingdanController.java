@@ -155,6 +155,20 @@ public class MeishidingdanController {
         return R.ok();
     }
     
+    /**
+     * 支付订单
+     */
+    @RequestMapping("/pay/{id}")
+    public R pay(@PathVariable("id") Long id){
+        MeishidingdanEntity meishidingdan = meishidingdanService.selectById(id);
+        if(meishidingdan == null) {
+            return R.error("订单不存在");
+        }
+        meishidingdan.setIspay("已支付");
+        meishidingdanService.updateById(meishidingdan);
+        return R.ok("支付成功");
+    }
+    
 
     /**
      * 删除
