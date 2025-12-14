@@ -2,11 +2,16 @@ package com.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 import com.interceptor.AuthorizationInterceptor;
+
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Configuration
 public class InterceptorConfig extends WebMvcConfigurationSupport{
@@ -18,7 +23,7 @@ public class InterceptorConfig extends WebMvcConfigurationSupport{
 	
 	@Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(getAuthorizationInterceptor()).addPathPatterns("/**").excludePathPatterns("/static/**");
+        registry.addInterceptor(getAuthorizationInterceptor()).addPathPatterns("/**").excludePathPatterns("/static/**", "/upload/**");
         super.addInterceptors(registry);
 	}
 	
@@ -28,9 +33,23 @@ public class InterceptorConfig extends WebMvcConfigurationSupport{
 	@Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		// 前后端分离，只保留必要的静态资源路径
+		registry.addResourceHandler("/upload/**")
+        .addResourceLocations("classpath:/static/upload/");
 		registry.addResourceHandler("/**")
         .addResourceLocations("classpath:/static/")
         .addResourceLocations("classpath:/public/");
 		super.addResourceHandlers(registry);
     }
+	
+	/**
+	 * 配置HTTP消息转换器，确保JSON响应使用UTF-8编码
+	 */
+	@Override
+	protected void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+		// 字符串消息转换器，确保使用UTF-8编码
+		StringHttpMessageConverter stringConverter = new StringHttpMessageConverter(StandardCharsets.UTF_8);
+		converters.add(0, stringConverter);
+		
+		super.addDefaultHttpMessageConverters(converters);
+	}
 }

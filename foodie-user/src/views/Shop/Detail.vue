@@ -98,7 +98,7 @@
                 @click="router.push(`/food/${item.id}`)"
               >
                 <el-image 
-                  :src="item.tupian?.split(',')[0]" 
+                  :src="getImageUrl(item.tupian)" 
                   fit="cover"
                   style="width: 100%; height: 160px;"
                 />
@@ -124,6 +124,7 @@ import { useUserStore } from '@/stores/user'
 import request from '@/utils/request'
 import { getFoodList } from '@/api/food'
 import { addCollection, deleteCollection, checkCollection } from '@/api/collection'
+import { getImageUrl } from '@/utils/image'
 import { ElMessage } from 'element-plus'
 import { Star, StarFilled } from '@element-plus/icons-vue'
 
@@ -141,7 +142,7 @@ const collectionId = ref(null)
 
 const images = computed(() => {
   if (!shop.value?.zhaopian) return []
-  return shop.value.zhaopian.split(',')
+  return shop.value.zhaopian.split(',').map(img => getImageUrl(img))
 })
 
 onMounted(async () => {

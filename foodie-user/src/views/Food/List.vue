@@ -54,7 +54,7 @@
                 @click="router.push(`/food/${item.id}`)"
               >
                 <el-image 
-                  :src="item.tupian?.split(',')[0]" 
+                  :src="getImageUrl(item.tupian)" 
                   fit="cover"
                   style="width: 100%; height: 200px;"
                 >
@@ -98,6 +98,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getFoodList, getFoodCategories } from '@/api/food'
+import { getImageUrl } from '@/utils/image'
 import { Search } from '@element-plus/icons-vue'
 
 const router = useRouter()

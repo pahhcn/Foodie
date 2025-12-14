@@ -20,7 +20,7 @@
               <el-row :gutter="20">
                 <el-col :span="6">
                   <el-image 
-                    :src="item.picture" 
+                    :src="getImageUrl(item.picture)" 
                     fit="cover"
                     style="width: 100%; height: 140px; border-radius: 4px;"
                   />
@@ -45,6 +45,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getNewsList } from '@/api/common'
+import { getImageUrl } from '@/utils/image'
 
 const router = useRouter()
 const list = ref([])

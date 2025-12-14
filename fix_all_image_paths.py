@@ -153,3 +153,4 @@ with open('database/init_realistic_data.sql', 'w', encoding='utf-8') as f:
 
 print("所有图片路径更新完成！")
 
+

@@ -29,7 +29,7 @@ DELETE FROM `config` WHERE name LIKE 'picture%';
 -- 第二步：插入美食分类（10个真实分类）
 -- ============================================
 
-INSERT INTO `meishifenlei` (`id`, `addtime`, `meishifenlei`) VALUES
+INSERT IGNORE INTO `meishifenlei` (`id`, `addtime`, `meishifenlei`) VALUES
 (1, NOW(), '川菜'),
 (2, NOW(), '粤菜'),
 (3, NOW(), '湘菜'),

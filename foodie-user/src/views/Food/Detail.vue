@@ -13,7 +13,7 @@
           <el-col :span="10">
             <el-image 
               v-if="food.tupian" 
-              :src="food.tupian" 
+              :src="getImageUrl(food.tupian)" 
               fit="cover" 
               style="width: 100%; height: 400px; border-radius: 8px;" 
             />
@@ -158,6 +158,7 @@ import { useUserStore } from '@/stores/user'
 import { getFoodDetail } from '@/api/food'
 import { createOrder } from '@/api/order'
 import { addCollection, deleteCollection, checkCollection } from '@/api/collection'
+import { getImageUrl } from '@/utils/image'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { View, Star, StarFilled } from '@element-plus/icons-vue'
 

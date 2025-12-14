@@ -24,7 +24,7 @@
         
         <el-image 
           v-if="news.picture"
-          :src="news.picture" 
+          :src="getImageUrl(news.picture)" 
           fit="cover"
           style="width: 100%; max-height: 400px; border-radius: 8px; margin: 20px 0;"
         />
@@ -39,6 +39,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { getNewsDetail } from '@/api/common'
+import { getImageUrl } from '@/utils/image'
 
 const router = useRouter()
 const route = useRoute()

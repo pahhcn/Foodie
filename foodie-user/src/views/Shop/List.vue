@@ -22,7 +22,7 @@
                 @click="router.push(`/shop/${item.id}`)"
               >
                 <el-image 
-                  :src="item.zhaopian?.split(',')[0]" 
+                  :src="getImageUrl(item.zhaopian)" 
                   fit="cover"
                   style="width: 100%; height: 180px;"
                 />
@@ -43,6 +43,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import request from '@/utils/request'
+import { getImageUrl } from '@/utils/image'
 
 const router = useRouter()
 const list = ref([])

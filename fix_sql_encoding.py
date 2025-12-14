@@ -30,3 +30,4 @@ with open('database/init_realistic_data.sql', 'w', encoding='utf-8') as f:
 
 print("SQL文件编码和URL格式修复完成！")
 
+

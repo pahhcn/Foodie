@@ -21,3 +21,4 @@ with open('database/init_realistic_data.sql', 'w', encoding='utf-8') as f:
 
 print("SQL文件修复完成！")
 
+

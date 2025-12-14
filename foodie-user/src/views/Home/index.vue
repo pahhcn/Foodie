@@ -31,7 +31,7 @@
               @click="router.push(`/food/${item.id}`)"
             >
               <el-image 
-                :src="item.tupian?.split(',')[0]" 
+                :src="getImageUrl(item.tupian)" 
                 fit="cover"
                 style="width: 100%; height: 200px;"
               >
@@ -73,7 +73,7 @@
               @click="router.push(`/news/${item.id}`)"
             >
               <el-image 
-                :src="item.picture" 
+                :src="getImageUrl(item.picture)" 
                 fit="cover"
                 style="width: 100%; height: 160px; border-radius: 4px;"
               />
@@ -92,6 +92,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getBanners, getNewsList } from '@/api/common'
 import { getRecommendFoods } from '@/api/food'
+import { getImageUrl } from '@/utils/image'
 import { ArrowRight } from '@element-plus/icons-vue'
 
 const router = useRouter()
@@ -108,7 +109,7 @@ const loadData = async () => {
   try {
     // 加载轮播图
     const bannerRes = await getBanners()
-    banners.value = bannerRes.data.list.map(item => ({ img: item.value }))
+    banners.value = bannerRes.data.list.map(item => ({ img: getImageUrl(item.value) }))
     
     // 加载推荐美食
     const foodRes = await getRecommendFoods(8)
