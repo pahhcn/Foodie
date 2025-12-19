@@ -24,45 +24,40 @@
         >
           <div class="order-header">
             <div class="order-info">
-              <span class="order-no">订单号：{{ order.dingdanhao }}</span>
+              <span class="order-no">订单号：{{ order.dingdanbianhao }}</span>
               <span class="order-time">{{ order.xiadanshijian }}</span>
             </div>
-            <el-tag :type="getStatusType(order.sfsh)">
-              {{ order.sfsh === '是' ? '已审核' : '待审核' }}
-            </el-tag>
+            <div class="status-tags">
+              <el-tag :type="getStatusType(order.sfsh)">
+                {{ order.sfsh === '是' ? '已审核' : '待审核' }}
+              </el-tag>
+              <el-tag :type="order.ispay === '已支付' ? 'success' : 'info'">
+                {{ order.ispay || '未支付' }}
+              </el-tag>
+            </div>
           </div>
           
           <el-divider />
           
           <div class="order-body">
             <div class="food-info">
-              <el-image 
-                v-if="order.tupian"
-                :src="order.tupian.split(',')[0]"
-                fit="cover"
-                class="food-image"
-              >
-                <template #error>
-                  <div class="image-slot">
-                    <el-icon><Picture /></el-icon>
-                  </div>
-                </template>
-              </el-image>
               <div class="food-details">
                 <h3>{{ order.meishimingcheng }}</h3>
                 <p class="shop-name">店铺：{{ order.dianpumingcheng }}</p>
-                <p class="quantity">数量：{{ order.shuliang }}</p>
+                <p class="contact">联系电话：{{ order.lianxidianhua }}</p>
+                <p class="quantity">数量：{{ order.goumaishuliang }}</p>
+                <p class="price-item">单价：¥{{ order.jiage }}</p>
               </div>
             </div>
             
             <div class="order-summary">
               <div class="price">
                 <span class="label">总价：</span>
-                <span class="amount">¥{{ order.zongjia }}</span>
+                <span class="amount">¥{{ order.zongjiage }}</span>
               </div>
               <div class="delivery">
                 <p>配送地址：{{ order.peisongdizhi }}</p>
-                <p>联系方式：{{ order.lianxifangshi }}</p>
+                <p>联系方式：{{ order.yonghushouji }}</p>
               </div>
             </div>
           </div>
@@ -245,6 +240,11 @@ const handleDelete = async (id) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.status-tags {
+  display: flex;
+  gap: 8px;
 }
 
 .order-info {

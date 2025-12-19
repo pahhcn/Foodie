@@ -18,7 +18,7 @@
       
       <el-descriptions :column="2" border>
         <el-descriptions-item label="订单号">
-          {{ order.dingdanhao }}
+          {{ order.dingdanbianhao }}
         </el-descriptions-item>
         <el-descriptions-item label="下单时间">
           {{ order.xiadanshijian }}
@@ -29,15 +29,18 @@
         <el-descriptions-item label="店铺名称">
           {{ order.dianpumingcheng }}
         </el-descriptions-item>
+        <el-descriptions-item label="联系电话">
+          {{ order.lianxidianhua }}
+        </el-descriptions-item>
         <el-descriptions-item label="数量">
-          {{ order.shuliang }}
+          {{ order.goumaishuliang }}
         </el-descriptions-item>
         <el-descriptions-item label="单价">
-          ¥{{ order.danjia }}
+          ¥{{ order.jiage }}
         </el-descriptions-item>
         <el-descriptions-item label="总价">
           <span style="color: #FF6B6B; font-size: 18px; font-weight: 600;">
-            ¥{{ order.zongjia }}
+            ¥{{ order.zongjiage }}
           </span>
         </el-descriptions-item>
         <el-descriptions-item label="支付状态">
@@ -45,31 +48,22 @@
             {{ order.ispay || '未支付' }}
           </el-tag>
         </el-descriptions-item>
+        <el-descriptions-item label="用户账号">
+          {{ order.yonghuzhanghao }}
+        </el-descriptions-item>
+        <el-descriptions-item label="用户姓名">
+          {{ order.yonghuxingming }}
+        </el-descriptions-item>
         <el-descriptions-item label="配送地址" :span="2">
           {{ order.peisongdizhi }}
         </el-descriptions-item>
         <el-descriptions-item label="联系方式" :span="2">
-          {{ order.lianxifangshi }}
+          {{ order.yonghushouji }}
         </el-descriptions-item>
-        <el-descriptions-item v-if="order.beizhu" label="备注" :span="2">
-          {{ order.beizhu }}
+        <el-descriptions-item v-if="order.shhf" label="审核回复" :span="2">
+          {{ order.shhf }}
         </el-descriptions-item>
       </el-descriptions>
-      
-      <div v-if="order.tupian" class="food-images" style="margin-top: 20px;">
-        <h3>美食图片</h3>
-        <el-space wrap>
-          <el-image
-            v-for="(img, index) in order.tupian.split(',')"
-            :key="index"
-            :src="img"
-            fit="cover"
-            style="width: 150px; height: 150px; border-radius: 8px;"
-            :preview-src-list="order.tupian.split(',')"
-            :initial-index="index"
-          />
-        </el-space>
-      </div>
       
       <div class="actions" style="margin-top: 20px;">
         <el-button v-if="order.ispay === '未支付'" type="primary" @click="handlePay">

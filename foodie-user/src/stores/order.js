@@ -52,13 +52,14 @@ export const useOrderStore = defineStore('order', () => {
         page,
         limit,
         yonghuzhanghao: username,
-        sfsh: '是',
         ...filters
       }
       
       const res = await orderApi.getOrderList(params)
       orders.value = res.data.list || []
       total.value = res.data.total || 0
+      
+      console.log('订单列表：', orders.value)
       
       return res.data
     } catch (error) {

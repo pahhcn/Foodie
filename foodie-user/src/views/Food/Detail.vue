@@ -11,11 +11,12 @@
         <el-row :gutter="30">
           <!-- 左侧图片 -->
           <el-col :span="10">
-            <el-carousel v-if="images.length" height="400px" indicator-position="outside">
-              <el-carousel-item v-for="(img, index) in images" :key="index">
-                <el-image :src="img" fit="cover" style="width: 100%; height: 100%;" />
-              </el-carousel-item>
-            </el-carousel>
+            <el-image 
+              v-if="food.tupian" 
+              :src="food.tupian" 
+              fit="cover" 
+              style="width: 100%; height: 400px; border-radius: 8px;" 
+            />
           </el-col>
           
           <!-- 右侧信息 -->
@@ -33,7 +34,6 @@
               <div class="price-section">
                 <span class="price-label">价格：</span>
                 <span class="price">¥{{ food.jiage }}</span>
-                <span class="unit">/ {{ food.guige }}</span>
               </div>
               
               <el-divider />
@@ -44,18 +44,28 @@
               </div>
               
               <div class="info-item">
+                <span class="label">联系电话：</span>
+                <span class="value">{{ food.lianxidianhua }}</span>
+              </div>
+              
+              <div class="info-item">
                 <span class="label">口味：</span>
                 <span class="value">{{ food.kouwei }}</span>
               </div>
               
-              <div v-if="food.meishijieshao" class="description">
-                <h3>美食介绍</h3>
-                <div v-html="food.meishijieshao"></div>
+              <div class="info-item">
+                <span class="label">特色：</span>
+                <span class="value">{{ food.tese }}</span>
+              </div>
+              
+              <div v-if="food.xiangqing" class="description">
+                <h3>详情介绍</h3>
+                <div v-html="food.xiangqing"></div>
               </div>
               
               <el-divider />
               
-              <!-- 点餐操作（核心功能） -->
+              <!-- 点餐操作 -->
               <div class="order-section">
                 <el-input-number 
                   v-model="quantity" 
@@ -66,7 +76,6 @@
                 <el-button 
                   type="primary" 
                   size="large"
-                  :icon="ShoppingCart"
                   @click="handleOrder"
                   :loading="orderLoading"
                   style="margin-left: 20px;"
@@ -74,9 +83,12 @@
                   立即点餐
                 </el-button>
                 <el-button 
-                  :icon="Star"
+                  :type="isCollected ? 'warning' : 'default'"
+                  :icon="isCollected ? StarFilled : Star"
                   size="large"
                   @click="handleCollection"
+                  :loading="collectionLoading"
+                  style="margin-left: 12px;"
                 >
                   {{ isCollected ? '已收藏' : '收藏' }}
                 </el-button>
@@ -85,36 +97,13 @@
           </el-col>
         </el-row>
       </el-card>
-      
-      <!-- 评价列表 -->
-      <el-card v-if="food" class="review-card" style="margin-top: 20px;">
-        <template #header>
-          <span>用户评价</span>
-        </template>
-        <el-empty v-if="!reviews.length" description="暂无评价" />
-        <div v-else class="reviews">
-          <div v-for="review in reviews" :key="review.id" class="review-item">
-            <div class="review-header">
-              <el-avatar :src="review.touxiang">
-                <el-icon><User /></el-icon>
-              </el-avatar>
-              <div class="review-info">
-                <span class="username">{{ review.yonghuxingming }}</span>
-                <el-rate v-model="review.pingfen" disabled size="small" />
-              </div>
-              <span class="review-time">{{ review.pingjiashijian }}</span>
-            </div>
-            <div class="review-content">{{ review.pingjianeirong }}</div>
-          </div>
-        </div>
-      </el-card>
     </div>
     
-    <!-- 点餐对话框（解决"一闪而过"问题的关键） -->
+    <!-- 下单对话框 -->
     <el-dialog
       v-model="orderDialogVisible"
       title="确认订单"
-      width="600px"
+      width="500px"
       :close-on-click-modal="false"
     >
       <el-form :model="orderForm" label-width="100px">
@@ -125,12 +114,12 @@
           <el-input v-model="orderForm.dianpumingcheng" disabled />
         </el-form-item>
         <el-form-item label="单价">
-          <el-input v-model="orderForm.danjia" disabled>
+          <el-input v-model="orderForm.jiage" disabled>
             <template #prepend>¥</template>
           </el-input>
         </el-form-item>
         <el-form-item label="数量">
-          <el-input-number v-model="orderForm.shuliang" :min="1" :max="99" />
+          <el-input-number v-model="orderForm.goumaishuliang" :min="1" :max="99" />
         </el-form-item>
         <el-form-item label="总价">
           <el-input :value="'¥' + totalPrice" disabled />
@@ -143,16 +132,8 @@
         </el-form-item>
         <el-form-item label="联系方式" required>
           <el-input 
-            v-model="orderForm.lianxifangshi" 
+            v-model="orderForm.yonghushouji" 
             placeholder="请输入联系方式"
-          />
-        </el-form-item>
-        <el-form-item label="备注">
-          <el-input 
-            v-model="orderForm.beizhu" 
-            type="textarea"
-            :rows="3"
-            placeholder="选填"
           />
         </el-form-item>
       </el-form>
@@ -174,15 +155,15 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
-import { useOrderStore } from '@/stores/order'
 import { getFoodDetail } from '@/api/food'
-import { ElMessage } from 'element-plus'
-import { ShoppingCart, Star } from '@element-plus/icons-vue'
+import { createOrder } from '@/api/order'
+import { addCollection, deleteCollection, checkCollection } from '@/api/collection'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { View, Star, StarFilled } from '@element-plus/icons-vue'
 
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
-const orderStore = useOrderStore()
 
 const food = ref(null)
 const loading = ref(false)
@@ -190,40 +171,32 @@ const quantity = ref(1)
 const orderDialogVisible = ref(false)
 const orderLoading = ref(false)
 const isCollected = ref(false)
-const reviews = ref([])
-
-const images = computed(() => {
-  if (!food.value?.tupian) return []
-  return food.value.tupian.split(',')
-})
+const collectionLoading = ref(false)
+const collectionId = ref(null)
 
 const totalPrice = computed(() => {
-  return (orderForm.value.danjia * orderForm.value.shuliang).toFixed(2)
+  if (!orderForm.value.jiage || !orderForm.value.goumaishuliang) return '0.00'
+  return (parseFloat(orderForm.value.jiage) * orderForm.value.goumaishuliang).toFixed(2)
 })
 
 const orderForm = ref({
-  meishixinxiid: '',
   meishimingcheng: '',
-  meishifenlei: '',
-  tupian: '',
+  dianpuzhanghao: '',
   dianpumingcheng: '',
-  danjia: 0,
-  shuliang: 1,
-  zongjia: 0,
-  peisongdizhi: '',
-  lianxifangshi: '',
-  beizhu: '',
+  lianxidianhua: '',
+  jiage: '',
+  goumaishuliang: 1,
+  zongjiage: '',
   yonghuzhanghao: '',
-  yonghuxingming: ''
+  yonghuxingming: '',
+  yonghushouji: '',
+  peisongdizhi: ''
 })
 
 onMounted(async () => {
+  console.log('=== 美食详情页面已加载 ===')
   await loadFoodDetail()
-  // 加载用户地址和电话
-  if (userStore.userInfo) {
-    orderForm.value.peisongdizhi = userStore.userInfo.peisongdizhi || ''
-    orderForm.value.lianxifangshi = userStore.userInfo.yonghushouji || ''
-  }
+  await checkIfCollected()
 })
 
 const loadFoodDetail = async () => {
@@ -231,15 +204,70 @@ const loadFoodDetail = async () => {
   try {
     const res = await getFoodDetail(route.params.id)
     food.value = res.data
-    // 可以加载评价列表
+    console.log('美食信息：', food.value)
   } catch (error) {
     console.error('加载失败：', error)
+    ElMessage.error('加载美食信息失败')
   } finally {
     loading.value = false
   }
 }
 
+// 检查是否已收藏
+const checkIfCollected = async () => {
+  if (!userStore.isLoggedIn) return
+  
+  try {
+    const res = await checkCollection(route.params.id, 'meishixinxi')
+    if (res.data.list && res.data.list.length > 0) {
+      isCollected.value = true
+      collectionId.value = res.data.list[0].id
+    }
+  } catch (error) {
+    console.error('检查收藏状态失败：', error)
+  }
+}
+
+// 处理收藏
+const handleCollection = async () => {
+  if (!userStore.isLoggedIn) {
+    ElMessage.warning('请先登录')
+    router.push('/login')
+    return
+  }
+  
+  collectionLoading.value = true
+  try {
+    if (isCollected.value) {
+      // 取消收藏
+      await deleteCollection([collectionId.value])
+      isCollected.value = false
+      collectionId.value = null
+      ElMessage.success('已取消收藏')
+    } else {
+      // 添加收藏
+      const collectionData = {
+        refid: food.value.id,
+        tablename: 'meishixinxi',
+        name: food.value.meishimingcheng,
+        picture: food.value.tupian
+      }
+      await addCollection(collectionData)
+      isCollected.value = true
+      await checkIfCollected() // 重新获取收藏ID
+      ElMessage.success('收藏成功')
+    }
+  } catch (error) {
+    console.error('收藏操作失败：', error)
+    ElMessage.error('操作失败，请重试')
+  } finally {
+    collectionLoading.value = false
+  }
+}
+
 const handleOrder = () => {
+  console.log('点击立即点餐按钮')
+  
   if (!userStore.isLoggedIn) {
     ElMessage.warning('请先登录')
     router.push('/login')
@@ -248,65 +276,100 @@ const handleOrder = () => {
   
   // 填充订单表单
   orderForm.value = {
-    meishixinxiid: food.value.id,
     meishimingcheng: food.value.meishimingcheng,
-    meishifenlei: food.value.meishifenlei,
-    tupian: food.value.tupian,
+    dianpuzhanghao: food.value.dianpuzhanghao || '',
     dianpumingcheng: food.value.dianpumingcheng,
-    danjia: food.value.jiage,
-    shuliang: quantity.value,
-    zongjia: (food.value.jiage * quantity.value).toFixed(2),
-    peisongdizhi: userStore.userInfo?.peisongdizhi || '',
-    lianxifangshi: userStore.userInfo?.yonghushouji || '',
-    beizhu: '',
-    yonghuzhanghao: userStore.username,
-    yonghuxingming: userStore.userInfo?.yonghuxingming || ''
+    lianxidianhua: food.value.lianxidianhua || '',
+    jiage: String(food.value.jiage),
+    goumaishuliang: quantity.value,
+    zongjiage: '',
+    yonghuzhanghao: localStorage.getItem('adminName') || '',
+    yonghuxingming: userStore.userInfo?.yonghuxingming || '',
+    yonghushouji: userStore.userInfo?.yonghushouji || '',
+    peisongdizhi: userStore.userInfo?.peisongdizhi || ''
   }
   
-  // 显示对话框而不是跳转页面
+  console.log('打开订单对话框')
   orderDialogVisible.value = true
 }
 
 const submitOrder = async () => {
+  console.log('点击确认下单按钮')
+  
   if (!orderForm.value.peisongdizhi) {
     ElMessage.warning('请填写配送地址')
     return
   }
-  if (!orderForm.value.lianxifangshi) {
+  if (!orderForm.value.yonghushouji) {
     ElMessage.warning('请填写联系方式')
     return
   }
   
+  console.log('开始提交订单')
   orderLoading.value = true
+  
   try {
-    // 更新总价
-    orderForm.value.zongjia = totalPrice.value
+    // 生成订单编号和时间（使用本地时间）
+    const now = new Date()
+    const year = now.getFullYear()
+    const month = String(now.getMonth() + 1).padStart(2, '0')
+    const day = String(now.getDate()).padStart(2, '0')
+    const hour = String(now.getHours()).padStart(2, '0')
+    const minute = String(now.getMinutes()).padStart(2, '0')
+    const second = String(now.getSeconds()).padStart(2, '0')
+    const random = Math.floor(Math.random() * 100000)
+    const dingdanbianhao = `${year}${month}${day}${hour}${minute}${second}${random}`
+    const xiadanshijian = `${year}-${month}-${day} ${hour}:${minute}:${second}`
     
-    // 创建订单（不会跳转页面）
-    const result = await orderStore.createOrder(orderForm.value)
+    // 构建订单数据
+    const orderData = {
+      dingdanbianhao: dingdanbianhao,
+      meishimingcheng: orderForm.value.meishimingcheng,
+      dianpuzhanghao: orderForm.value.dianpuzhanghao,
+      dianpumingcheng: orderForm.value.dianpumingcheng,
+      lianxidianhua: orderForm.value.lianxidianhua,
+      jiage: orderForm.value.jiage,
+      goumaishuliang: orderForm.value.goumaishuliang,
+      zongjiage: totalPrice.value,
+      yonghuzhanghao: orderForm.value.yonghuzhanghao,
+      yonghuxingming: orderForm.value.yonghuxingming,
+      yonghushouji: orderForm.value.yonghushouji,
+      peisongdizhi: orderForm.value.peisongdizhi,
+      xiadanshijian: xiadanshijian,
+      sfsh: '否',
+      ispay: '未支付'
+    }
+    
+    console.log('提交订单数据：', orderData)
+    
+    // 调用 API
+    const res = await createOrder(orderData)
+    console.log('订单创建成功：', res)
     
     // 关闭对话框
     orderDialogVisible.value = false
     
-    // 根据用户选择决定是否跳转到订单页
-    if (result.goToOrders) {
+    // 提示用户
+    await ElMessageBox.confirm(
+      '订单创建成功！',
+      '下单成功',
+      {
+        confirmButtonText: '查看订单',
+        cancelButtonText: '继续浏览',
+        type: 'success'
+      }
+    ).then(() => {
       router.push('/user/orders')
-    }
+    }).catch(() => {
+      // 用户选择继续浏览
+    })
+    
   } catch (error) {
     console.error('下单失败：', error)
+    ElMessage.error('下单失败，请重试')
   } finally {
     orderLoading.value = false
   }
-}
-
-const handleCollection = () => {
-  if (!userStore.isLoggedIn) {
-    ElMessage.warning('请先登录')
-    router.push('/login')
-    return
-  }
-  isCollected.value = !isCollected.value
-  ElMessage.success(isCollected.value ? '收藏成功' : '取消收藏')
 }
 </script>
 
@@ -398,51 +461,5 @@ const handleCollection = () => {
   display: flex;
   align-items: center;
   margin-top: 30px;
-}
-
-.review-card {
-  margin-top: 20px;
-}
-
-.reviews {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.review-item {
-  padding: 16px;
-  background: #fafafa;
-  border-radius: 8px;
-}
-
-.review-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.review-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.username {
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.review-time {
-  font-size: 12px;
-  color: #999;
-}
-
-.review-content {
-  font-size: 14px;
-  color: #666;
-  line-height: 1.6;
 }
 </style>
